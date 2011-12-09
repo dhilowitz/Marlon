@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>test</title>
+	<script type="text/javascript" language="JavaScript" src="_/js/jquery.min.js"></script>
+	<script type="text/javascript" language="JavaScript" src="_/js/Three.js"></script>
+	<script type="text/javascript" language="JavaScript" src="_/js/RequestAnimationFrame.js"></script>
+</head>
+
+<body>
+
+	<script>
+
+	    var camera, scene, renderer,
+	    geometry, material, mesh, playheadGrid;
+	
+		var WIDTH = window.innerWidth - 0;
+		var HEIGHT = window.innerHeight - 0;
+	
+		var grid;
+		var rotationDegrees = -45;
+		var cameraDist = 20;
+		var rotationStepAmount = 5;
+		var playheadPosition = 0;
+		var stepWidth = 32;
+
+	    init();
+	    animate();
+
+	    function init() {
+
+	        scene = new THREE.Scene();
+
+			
+
+			// set some camera attributes
+			var VIEW_ANGLE = 75,
+			    ASPECT = WIDTH / HEIGHT,
+			    NEAR = .1,
+			    FAR = 1000;
+
+			
+			camera = new THREE.OrthographicCamera( WIDTH / -2, 							WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, -10, 1000 );
+				
+			camera.position.y = 5;
+			calculateCameraPosition();
+			
+			camera.updateMatrix();
+			
+	        scene.add( camera );
+
+	        
+			//Cube
+			geometry = new THREE.CubeGeometry( 32, 32, 32 );
+	        material = new THREE.MeshBasicMaterial( { color: 0x0000FF, wireframe: true } );
+
+	        cube = new THREE.Mesh( geometry, material );
+			cube.position.x = 0;
+			cube.position.y = 16;
+			cube.position.z = 0;
+	        scene.add( cube );
+	
+			//Grid
+			geometry = new THREE.PlaneGeometry( 512, 512, 16, 16);
+	        material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: true } );
+
+	        grid = new THREE.Mesh( geometry, material );
+			grid.position.x = grid.position.y = grid.position.z = 0;
+			grid.rotation.x = -Math.PI/2;
+			grid.receiveShadow = true;
+			scene.add( grid );
+	
+			//Playhead Grid
+			geometry = new THREE.PlaneGeometry( 32, 512, 1, 16);
+	        material = new THREE.MeshBasicMaterial( { color: 0x0000FF, wireframe: true } );
+
+	        playheadGrid = new THREE.Mesh( geometry, material );
+			playheadGrid.position.x = grid.position.z = 0;
+			grid.position.y = -1;
+			playheadGrid.rotation.x = -Math.PI/2;
+			calculatePlayheadPosition();
+			scene.add( playheadGrid );
+
+	        renderer = new THREE.CanvasRenderer();
+	        renderer.setSize(WIDTH, HEIGHT);
+
+	        document.body.appendChild( renderer.domElement );
+
+	    }
+
+	    function animate() {
+			requestAnimationFrame( animate );
+			
+	        render();
+	    }
+
+	    function render() {
+			renderer.render( scene, camera );
+	    }
+	
+		function calculatePlayheadPosition() {
+			playheadGrid.position.x = stepWidth*playheadPosition - (240);
+		}
+	
+		function calculateCameraPosition() {
+			var radians = (rotationDegrees / 180) * (Math.PI)
+			camera.position.z = cameraDist * Math.cos(radians);
+			camera.position.x = cameraDist * Math.sin(radians);
+			camera.lookAt(scene.position);
+		}
+		
+		function movePlayhead() {
+			playheadPosition = (playheadPosition < 15) ? playheadPosition + 1:0;
+			
+		}
+	
+		var xTriggered = 0;
+		
+		$(document.body).keydown(function(event) {
+			
+			switch(event.which) {
+				case 188: //',' key
+					rotationDegrees -= rotationStepAmount;
+					calculateCameraPosition();
+					event.preventDefault();
+					break;
+				case 190: //'.' key
+					rotationDegrees += rotationStepAmount;
+					calculateCameraPosition();
+					event.preventDefault();
+					break;
+				case 37: //left arrow
+					
+					event.preventDefault();
+					break;
+				case 39: //right arrow
+					
+					event.preventDefault();
+					break;
+				case 38: //up arrow
+					event.preventDefault();
+					break;
+				case 40: // down arrow
+					event.preventDefault();
+					break;
+				case 189: // '-' key
+					camera.position.y--;
+					calculateCameraPosition();
+					event.preventDefault();
+					break;
+				case 187: // '+' key
+					camera.position.y++;
+					calculateCameraPosition();
+					event.preventDefault();
+					break;
+				case 32: //space bar
+					movePlayhead();
+					calculatePlayheadPosition();
+					event.preventDefault();
+					break;
+			}
+			
+		
+			xTriggered++;
+			
+			var msg = "Handler for .keypress() called " + xTriggered + " time(s). Keycode was " + event.which + "\n";
+			msg += "Camera.x = " + camera.position.x + " / ";	
+			msg += "Camera.y = " + camera.position.y + " / ";	
+			msg += "Camera.z = " + camera.position.z + ".\n ";
+			msg += "Camera.rotation.x = " + camera.rotation.x + " / ";	
+			msg += "Camera.rotation.y = " + camera.rotation.y + " / ";	
+			msg += "Camera.rotation.z = " + camera.rotation.z + ". ";
+			console.log(msg);		
+				
+		});
+
+	</script>
+
+
+</body>
+</html>
