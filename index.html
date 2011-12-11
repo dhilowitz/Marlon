@@ -9,11 +9,9 @@
 	
 	<title>MARLON</title>
 	
-	<meta name="description" content="MARLON" />
-	<!-- Google will often use this as its description of your page/site. Make it good. -->
-	
+	<meta name="description" content="MARLON: A 3D HTML5-based music sequencer." />
 	<meta name="author" content="Marlon" />
-	<meta name="Copyright" content="Copyright David Hilowitz 2010. All Rights Reserved." />
+	<meta name="Copyright" content="Copyright David Hilowitz 2011. All Rights Reserved." />
 
 	<meta name="DC.title" content="Marlon" />
 	<meta name="DC.subject" content="Marlon -- An HTML-based Music Sequencer" />
@@ -102,35 +100,21 @@
 	<script src="_/js/functions.js"></script>
 	<script src="_/js/modernizr-1.5.min.js"></script>
 	
-	<!-- don't forget Google Analytics -->
 	<script src="_/js/marlon.js"></script>
 
-	
-	
 </head>
 
 <body id="www-domain-com" onDragStart="return false;">
-<!--<div id="sound_generation"></div>-->
-<!--<div id="seq1_box">
+	<!--<div id="sound_generation"></div>-->
+	<script type="text/javascript" language="javascript">
+		var myMarlon = new Marlon("marlon_div");
+		animate();
 	
-  <canvas id="marlon_canvas" width="736" height="489"></canvas>  
-</div>
--->
-
-<script type="text/javascript" language="javascript">
-	var myMarlon = new Marlon("marlon_canvas");
-	animate();
-	
-	function animate() {
-		requestAnimationFrame( animate );
-		myMarlon.render();
-	}
-//	var interval = setInterval(function mainLoop() {myMarlon.update();}, 41);
-//	var isMuted = false;
-		
-</script>
-
-
-
+		function animate() {
+			requestAnimationFrame(animate);
+			myMarlon.render();
+		}
+	//	var isMuted = false;		
+	</script>
 </body>
 </html>
