@@ -1,12 +1,37 @@
-//Global parameters
+// Global parameters
+
+// Set some camera attributes
+var CAMERA_DIST = 20; 
+var CAMERA_ROTATION_STEP_AMOUNT = 5; // This is in degrees. 
+var SEQUENCER_STEP_WIDTH = 32;
+var NUMBER_OF_INSTRUMENTS = 16;
+var NUMBER_OF_SEQUENCE_STEPS = 16;
+
+// This is left over from Tito. Hmm. Do we want to have a fixed grid size?
 //var GRID_WIDTH = 736;
 //var GRID_HEIGHT = 449;
 
-function Ball()
-{
-
+function Sequence() {
+	this.data = new Array();
+	this.makeFakeData = function makeFakeData() {
+		this.data = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+	}
 }
 
+function Voice(voiceNumber)
+{
+	this.voiceNumber = voiceNumber;
+	this.sequence = new Sequence();
+}
+
+Marlon.prototype.setupVoices = function setupVoices() {
+	this.voices = new Array();
+	for(var i=0; i<NUMBER_OF_INSTRUMENTS;i++)
+	{
+		this.voices[i] = new Voice(i);
+		this.voices[i].sequence.makeFakeData();
+	}
+}
 
 function Marlon (marlonCanvasID)
 {
@@ -14,23 +39,17 @@ function Marlon (marlonCanvasID)
 	this.HEIGHT = window.innerHeight - 0;
 	
 	this.rotationDegrees = -45;
-	this.cameraDist = 20;
-	this.rotationStepAmount = 5;
 	this.playheadPosition = 0;
-	this.stepWidth = 32;
+
 	
 	this.init(marlonCanvasID);
 	this.setupEventHandlers();
+	
+	this.setupVoices();
 }
 
 Marlon.prototype.init = function init(marlonCanvasID) {
 	this.scene = new THREE.Scene();
-
-	// set some camera attributes
-	var VIEW_ANGLE = 75,
-	    ASPECT = this.WIDTH / this.HEIGHT,
-	    NEAR = .1,
-	    FAR = 1000;
 	
 	this.camera = new THREE.OrthographicCamera( this.WIDTH / -2, 							this.WIDTH / 2, this.HEIGHT / 2, this.HEIGHT / - 2, -10, 1000 );
 		
@@ -89,17 +108,18 @@ Marlon.prototype.animate =  function animate() {
 }
 */
 Marlon.prototype.render =  function render() {
+//	this.movePlayhead(); this.calculatePlayheadPosition();
 	this.renderer.render( this.scene, this.camera );
 }
 
 Marlon.prototype.calculatePlayheadPosition =  function calculatePlayheadPosition() {
-	this.playheadGrid.position.x = this.stepWidth*this.playheadPosition - (240);
+	this.playheadGrid.position.x = SEQUENCER_STEP_WIDTH*this.playheadPosition - (240);
 }
 
 Marlon.prototype.calculateCameraPosition =  function calculateCameraPosition() {
 	var radians = (this.rotationDegrees / 180) * (Math.PI)
-	this.camera.position.z = this.cameraDist * Math.cos(radians);
-	this.camera.position.x = this.cameraDist * Math.sin(radians);
+	this.camera.position.z = CAMERA_DIST * Math.cos(radians);
+	this.camera.position.x = CAMERA_DIST * Math.sin(radians);
 	this.camera.lookAt(this.scene.position);
 }
 
@@ -115,12 +135,12 @@ Marlon.prototype.setupEventHandlers = function setupEventHandlers() {
 Marlon.prototype.onKeyDown = function onKeyDown(event) {
 	switch(event.which) {
 		case 188: //',' key
-			this.rotationDegrees -= this.rotationStepAmount;
+			this.rotationDegrees -= CAMERA_ROTATION_STEP_AMOUNT;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 190: //'.' key
-			this.rotationDegrees += this.rotationStepAmount;
+			this.rotationDegrees += CAMERA_ROTATION_STEP_AMOUNT;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
@@ -157,12 +177,13 @@ Marlon.prototype.onKeyDown = function onKeyDown(event) {
 	this.xTriggered++;
 
 	var msg = "Handler for .keypress() called " + this.xTriggered + " time(s). Keycode was " + event.which + "\n";
-	msg += "Camera.x = " + this.camera.position.x + " / ";	
-	msg += "Camera.y = " + this.camera.position.y + " / ";	
-	msg += "Camera.z = " + this.camera.position.z + ".\n ";
+	msg += "Camera:\n";
+	msg += "x: " + this.camera.position.x + " / ";	
+	msg += "y: " + this.camera.position.y + " / ";	
+	msg += "z: " + this.camera.position.z + ".\n";
 	msg += "Camera.rotation.x = " + this.camera.rotation.x + " / ";	
 	msg += "Camera.rotation.y = " + this.camera.rotation.y + " / ";	
-	msg += "Camera.rotation.z = " + this.camera.rotation.z + ". ";
+	msg += "Camera.rotation.z = " + this.camera.rotation.z + ".";
 	d(msg);		
 
 }
@@ -170,7 +191,6 @@ Marlon.prototype.onKeyDown = function onKeyDown(event) {
 
 Marlon.prototype.onMouseMove = function onMouseMove(evt)
 {
-	
 	d('mouseMove');
 }
 
@@ -178,6 +198,4 @@ Marlon.prototype.onMouseClick = function onMouseClick(evt)
 {
 	//$('#mouseX').text(mouseX);
 	//$('#mouseY').text(mouseY);
-	
-	
 }
