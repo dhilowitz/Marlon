@@ -1,1 +1,6 @@
 *.tmproj
+dwsync.xml
+.svn
+*.svn
+.svn*
+_/.DS_Store
