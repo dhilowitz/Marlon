@@ -1,5 +1,5 @@
 MARLON:
-- Sign up for github @done
-- Add this project to github @done
-- Make an object-orient version of test.html @done
+✓ Sign up for github @done
+✓ Add this project to github @done
+✓ Make an object-orient version of test.html @done
 - Start using globals instead of class variables for constants.
