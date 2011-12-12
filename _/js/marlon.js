@@ -99,6 +99,7 @@ function Marlon (marlonCanvasID)
 	
 	this.setupVoices();
 	this.setupCubes();
+	this.dimAndUndimNotes();
 }
 
 
@@ -120,28 +121,64 @@ Marlon.prototype.drawGrid = function() {
 Marlon.prototype.dimAndUndimNotes = function() {
 	if(typeof(this.voices) == 'undefined')
 		return;
+		
 	for(var i=0; i<NUMBER_OF_VOICES;i++)
 	{
 		if(i == this.currentVoice) {
 			currentColor = VOICE_COLORS[i];
+			currentColor = 0x336666;
 			opacity = 0.7;
 			visible = true;
 			wireframe = false;
 		} else {
+			currentColor = 0x336666;
 			currentColor = VOICE_COLORS[i];
-			opacity = 1;
+			opacity = 0.7;
 			visible = true;
-			wireframe = true;
+			wireframe = false;
 		}
+		
+		var material = new THREE.MeshBasicMaterial( { color: currentColor, wireframe: wireframe,opacity: opacity } );
 		
 		for(var j = 0; j<NUMBER_OF_SEQUENCE_STEPS; j++)
 		{
 			this.voices[i].sequence.notes[j].cube.visible = visible;
-			this.voices[i].sequence.notes[j].cube.material.wireframe = wireframe;
-			this.voices[i].sequence.notes[j].cube.material.opacity = opacity;
-			//this.voices[i].sequence.notes[j].cube.material.color = currentColor;
+			this.voices[i].sequence.notes[j].cube.material = material;
 		}
 	}
+}
+
+Marlon.prototype.drawCurrentVoiceSelector = function() {
+	var geometry = new THREE.CubeGeometry( GRID_WIDTH, GRID_DEPTH, SEQUENCER_STEP_WIDTH );
+    var material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: false,opacity: 0.3 } );
+
+	var materialFrame = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: true,opacity: 0.5, doubleSided:false} );
+
+    this.currentVoiceSelector = new THREE.Mesh( geometry, material );
+	this.currentVoiceSelector.rotation.x = -Math.PI/2;
+	
+	var geometryLeft = new THREE.PlaneGeometry( GRID_WIDTH, SEQUENCER_STEP_WIDTH, NUMBER_OF_SEQUENCE_STEPS, 1);
+	this.currentVoiceSelectorLeft = new THREE.Mesh( geometryLeft, material );
+	
+	var geometryBack = new THREE.PlaneGeometry( GRID_WIDTH, SEQUENCER_STEP_WIDTH, NUMBER_OF_GRID_NOTES, 1);
+	this.currentVoiceSelectorBack = new THREE.Mesh( geometryBack, material );
+	this.currentVoiceSelectorBack.rotation.y = -Math.PI/2;
+	
+	var geometryBottom = new THREE.PlaneGeometry( GRID_WIDTH, GRID_DEPTH, 16, 16 );
+	this.currentVoiceSelectorBottom = new THREE.Mesh( geometryBottom, material );
+	this.currentVoiceSelectorBottom.rotation.x = -Math.PI/2;
+	
+	this.currentVoiceSelectorFrame = new THREE.Mesh( geometry, materialFrame );
+	this.currentVoiceSelectorFrame.rotation.x = -Math.PI/2;
+	
+	this.moveCurrentVoiceSelector();
+	this.scene.add( this.currentVoiceSelectorFrame );
+	
+	this.scene.add( this.currentVoiceSelector );
+	
+	// this.scene.add( this.currentVoiceSelectorBack );	
+	// 	this.scene.add( this.currentVoiceSelectorLeft );
+	// 	this.scene.add( this.currentVoiceSelectorBottom );		
 }
 
 Marlon.prototype.moveCurrentVoiceSelector = function() {
@@ -153,27 +190,20 @@ Marlon.prototype.moveCurrentVoiceSelector = function() {
 	this.currentVoiceSelectorFrame.position.y = this.currentVoiceSelector.position.y;
 	this.currentVoiceSelectorFrame.position.z = this.currentVoiceSelector.position.z;
 	
+	this.currentVoiceSelectorLeft.position.x = this.currentVoiceSelector.position.x;
+	this.currentVoiceSelectorLeft.position.y = this.currentVoiceSelector.position.y;
+	this.currentVoiceSelectorLeft.position.z = 0;
+	
+	this.currentVoiceSelectorBack.position.x = GRID_WIDTH;
+	this.currentVoiceSelectorBack.position.y = this.currentVoiceSelector.position.y;
+	this.currentVoiceSelectorBack.position.z = this.currentVoiceSelector.position.z;
+	
+	this.currentVoiceSelectorBottom.position.x = this.currentVoiceSelector.position.x;
+	this.currentVoiceSelectorBottom.position.y = this.currentVoiceSelector.position.y - SEQUENCER_STEP_WIDTH/2;
+	this.currentVoiceSelectorBottom.position.z = this.currentVoiceSelector.position.z;
+	
 	this.dimAndUndimNotes();
 }
-
-Marlon.prototype.drawCurrentVoiceSelector = function() {
-	var geometry = new THREE.CubeGeometry( GRID_WIDTH, GRID_DEPTH, SEQUENCER_STEP_WIDTH );
-    var material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: false,opacity: 0.7 } );
-
-	var materialFrame = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true,opacity: 0.5} );
-
-    this.currentVoiceSelector = new THREE.Mesh( geometry, material );
-	this.currentVoiceSelector.rotation.x = -Math.PI/2;
-	
-	this.currentVoiceSelectorFrame = new THREE.Mesh( geometry, materialFrame );
-	this.currentVoiceSelectorFrame.rotation.x = -Math.PI/2;
-	
-	this.moveCurrentVoiceSelector();
-	this.scene.add( this.currentVoiceSelectorFrame );
-	this.scene.add( this.currentVoiceSelector );	
-}
-
-
 
 Marlon.prototype.init = function init(marlonCanvasID) {
 	container = document.createElement( 'div' );
@@ -234,7 +264,7 @@ Marlon.prototype.setupCubes = function() {
 			if(currentNote.midiNote == -1) continue;
 			
 			//Cube
-			var geometry = new THREE.CubeGeometry( SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH );
+			var geometry = new THREE.CubeGeometry(SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH);
 		    var material = new THREE.MeshBasicMaterial({
 			        color: currentVoice.color,
 			        opacity: 0.7,
@@ -249,8 +279,6 @@ Marlon.prototype.setupCubes = function() {
 			currentNote.cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);
 			
 		    this.scene.add( currentNote.cube );
-		
-			//d("Adding a cube for " + dump(currentNote))
 		}
 		
 	}
