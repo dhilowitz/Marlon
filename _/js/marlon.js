@@ -59,6 +59,7 @@ Marlon.prototype.setupVoices = function setupVoices() {
 		this.voices[i].sequence.notes[i].on=true;
 		//this.voices[i].sequence.notes[i].midiNote=SCALE_BASE_NOTE+i;
 	}
+	
 	//Fake Data
 	this.voices[0].sequence.notes[0].midiNote = 57;
 	this.voices[0].sequence.notes[4].midiNote = 57;
@@ -226,6 +227,45 @@ Marlon.prototype.movePlayhead =  function() {
 Marlon.prototype.setupEventHandlers = function() {
 	var thisObject = this;
 	$(document.body).keydown(function(event) {thisObject.onKeyDown(event);});
+	$(document.body).mousedown(function(event) {thisObject.onMouseDown(event);});
+	$(document.body).mouseout(function(event) {thisObject.onMouseUp(event);});
+}
+
+
+Marlon.prototype.onMouseDown = function onMouseDown(event)
+{
+	
+	this.mouseXOnMouseDown = event.pageX;
+	this.mouseYOnMouseDown = event.pageY;
+	d("mouseXOnMouseDown: " + this.mouseXOnMouseDown);
+	this.rotationDegreesOnMouseDown = this.rotationDegrees;
+	d('onMouseDown');
+	
+	var thisObject = this;
+	$(document.body).bind('mousemove', function(event) {thisObject.onMouseMove(event);});
+	$(document.body).bind('mouseup',function(event) {thisObject.onMouseUp(event);});
+}
+
+
+Marlon.prototype.onMouseMove = function onMouseMove(event)
+{
+	this.mouseX = event.pageX;
+	var mouseRotationSensitivity = 0.2;
+	var mouseXDelta = (this.mouseX - this.mouseXOnMouseDown);
+	this.rotationDegrees = this.rotationDegreesOnMouseDown - (mouseXDelta * mouseRotationSensitivity);// * -0.12;
+	this.calculateCameraPosition();
+}
+
+Marlon.prototype.onMouseUp = function onMouseUp(event)
+{
+	var thisObject = this;
+	$(document.body).unbind('mousemove');
+}
+
+Marlon.prototype.onMouseClick = function onMouseClick(evt)
+{
+	//$('#mouseX').text(mouseX);
+	//$('#mouseY').text(mouseY);
 }
 
 Marlon.prototype.onKeyDown = function onKeyDown(event) {
@@ -329,16 +369,4 @@ Marlon.prototype.drawDebugAxes = function drawDebugAxes(){
         var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: info[i][6], opacity: 0.8, linewidth: 1}));
         this.scene.add(line);
     }
-}
-
-
-Marlon.prototype.onMouseMove = function onMouseMove(evt)
-{
-	d('mouseMove');
-}
-
-Marlon.prototype.onMouseClick = function onMouseClick(evt)
-{
-	//$('#mouseX').text(mouseX);
-	//$('#mouseY').text(mouseY);
 }
