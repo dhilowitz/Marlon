@@ -90,6 +90,8 @@ function Marlon (marlonCanvasID)
 	
 	this.rotationDegrees = -45;
 	this.playheadPosition = 0;
+	this.currentVoice = 0;
+	this.currentStep = 0;
 
 	
 	this.init(marlonCanvasID);
@@ -98,6 +100,79 @@ function Marlon (marlonCanvasID)
 	this.setupVoices();
 	this.setupCubes();
 }
+
+
+Marlon.prototype.drawGrid = function() {
+	//Grid
+	geometry = new THREE.PlaneGeometry( GRID_WIDTH, GRID_DEPTH, NUMBER_OF_SEQUENCE_STEPS, NUMBER_OF_GRID_NOTES);
+    material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: true } );
+
+    this.grid = new THREE.Mesh( geometry, material );
+	this.grid.position.x = this.grid.position.y = this.grid.position.z = 0;
+	this.grid.rotation.x = -Math.PI/2;
+	this.grid.position.x = GRID_WIDTH/2;
+	this.grid.position.z = GRID_DEPTH/2;
+	
+	this.scene.add( this.grid );
+	
+}
+
+Marlon.prototype.dimAndUndimNotes = function() {
+	if(typeof(this.voices) == 'undefined')
+		return;
+	for(var i=0; i<NUMBER_OF_VOICES;i++)
+	{
+		if(i == this.currentVoice) {
+			currentColor = VOICE_COLORS[i];
+			opacity = 0.7;
+			visible = true;
+			wireframe = false;
+		} else {
+			currentColor = VOICE_COLORS[i];
+			opacity = 1;
+			visible = true;
+			wireframe = true;
+		}
+		
+		for(var j = 0; j<NUMBER_OF_SEQUENCE_STEPS; j++)
+		{
+			this.voices[i].sequence.notes[j].cube.visible = visible;
+			this.voices[i].sequence.notes[j].cube.material.wireframe = wireframe;
+			this.voices[i].sequence.notes[j].cube.material.opacity = opacity;
+			//this.voices[i].sequence.notes[j].cube.material.color = currentColor;
+		}
+	}
+}
+
+Marlon.prototype.moveCurrentVoiceSelector = function() {
+	this.currentVoiceSelector.position.x = GRID_WIDTH/2;
+	this.currentVoiceSelector.position.y = SEQUENCER_STEP_WIDTH/2 + this.currentVoice*SEQUENCER_STEP_WIDTH;
+	this.currentVoiceSelector.position.z = GRID_DEPTH/2;
+	
+	this.currentVoiceSelectorFrame.position.x = this.currentVoiceSelector.position.x;
+	this.currentVoiceSelectorFrame.position.y = this.currentVoiceSelector.position.y;
+	this.currentVoiceSelectorFrame.position.z = this.currentVoiceSelector.position.z;
+	
+	this.dimAndUndimNotes();
+}
+
+Marlon.prototype.drawCurrentVoiceSelector = function() {
+	var geometry = new THREE.CubeGeometry( GRID_WIDTH, GRID_DEPTH, SEQUENCER_STEP_WIDTH );
+    var material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: false,opacity: 0.7 } );
+
+	var materialFrame = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true,opacity: 0.5} );
+
+    this.currentVoiceSelector = new THREE.Mesh( geometry, material );
+	this.currentVoiceSelector.rotation.x = -Math.PI/2;
+	
+	this.currentVoiceSelectorFrame = new THREE.Mesh( geometry, materialFrame );
+	this.currentVoiceSelectorFrame.rotation.x = -Math.PI/2;
+	
+	this.moveCurrentVoiceSelector();
+	this.scene.add( this.currentVoiceSelectorFrame );
+	this.scene.add( this.currentVoiceSelector );	
+}
+
 
 
 Marlon.prototype.init = function init(marlonCanvasID) {
@@ -119,18 +194,8 @@ Marlon.prototype.init = function init(marlonCanvasID) {
 	this.camera.rotation.x = -45 * (Math.PI / 180);
     this.scene.add( this.camera );
 
-    //Grid
-	geometry = new THREE.PlaneGeometry( GRID_WIDTH, GRID_DEPTH, NUMBER_OF_SEQUENCE_STEPS, NUMBER_OF_GRID_NOTES);
-    material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: true } );
-
-    this.grid = new THREE.Mesh( geometry, material );
-	this.grid.position.x = this.grid.position.y = this.grid.position.z = 0;
-	this.grid.rotation.x = -Math.PI/2;
-	this.grid.position.x = GRID_WIDTH/2;
-	this.grid.position.z = GRID_DEPTH/2;
-	
-	this.scene.add( this.grid );
-	
+    this.drawGrid();
+	this.drawCurrentVoiceSelector();
 	
 /*
 
@@ -178,6 +243,7 @@ Marlon.prototype.setupCubes = function() {
 			currentNote.cube = new THREE.Mesh( geometry, material );
 			currentNote.cube.position.x = (SEQUENCER_STEP_WIDTH/2) + stepIndex * SEQUENCER_STEP_WIDTH;// - (256/2);
 			currentNote.cube.position.y = (SEQUENCER_STEP_WIDTH/2) + voiceIndex * SEQUENCER_STEP_WIDTH;
+			currentVoice.sequence.notes[stepIndex].cube = currentNote.cube;
 			
 			var adjustedNote = currentNote.midiNote - SCALE_BASE_NOTE;
 			currentNote.cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);
@@ -292,6 +358,26 @@ Marlon.prototype.onKeyDown = function onKeyDown(event) {
 		case 40: // down arrow
 			event.preventDefault();
 			break;
+		case 48: // '0' arrow
+			this.rotationDegrees = -45;
+			this.calculateCameraPosition();
+			event.preventDefault();
+			break;
+		case 88: // 'x' arrow
+				if(this.currentVoice < NUMBER_OF_VOICES - 1) {
+					this.currentVoice++;
+					this.moveCurrentVoiceSelector();
+				}
+				event.preventDefault();
+				break;
+		case 90: // 'z' arrow
+				if(this.currentVoice > 0) {
+					this.currentVoice--;
+					this.moveCurrentVoiceSelector();
+				}
+				
+				event.preventDefault();
+				break;
 		case 189: // '-' key
 			this.camera.position.y-=10;
 			this.calculateCameraPosition();
