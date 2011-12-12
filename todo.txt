@@ -1,9 +1,9 @@
 MARLON:
-- Start using globals instead of class variables for constants.
-- Introduce the concept of voices
+✓ Start using globals instead of class variables for constants. @done
+✓ Introduce the concept of voices @done
+✓ Introduce the concept of notes @done
 - Introduce the concept of play/stop
-- Introduce the concept of notes
-
+- Recode the playhead
 
 ARCHIVE:
 ✓ Sign up for github @done

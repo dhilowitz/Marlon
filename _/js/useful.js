@@ -33,32 +33,6 @@ function randomIntInRange(lowerRange, higherRange)
 	return returnVal;
 }
 
-// Database
-function ConvertSQLServerDateTimeToJavaScriptDateObject(sqlServerDateTime)
-{
-	var theDate = new Date();
-	
-	var stringArrayYearMonthPlusSomeGarbage = sqlServerDateTime.split('-');
-	theDate.setFullYear(stringArrayYearMonthPlusSomeGarbage[0]);
-	theDate.setMonth(stringArrayYearMonthPlusSomeGarbage[1]);
-	
-	var stringGarbage = stringArrayYearMonthPlusSomeGarbage[2];
-	stringArrayDayPlusGarbage = stringGarbage.split(' ');
-	theDate.setDate(stringArrayDayPlusGarbage[0]);
-		
-	stringGarbage = stringArrayDayPlusGarbage[1];
-	var stringArrayHourMinutePlusGarbage = stringGarbage.split(':');
-	theDate.setHours(stringArrayHourMinutePlusGarbage[0]);
-	theDate.setMinutes(stringArrayHourMinutePlusGarbage[1]);
-	
-	stringGarbage = stringArrayHourMinutePlusGarbage[2]
-	var stringArraySecondPlusGarbage = stringGarbage.split('.');
-	theDate.setSeconds(stringArraySecondPlusGarbage[0]);
-	theDate.setMilliseconds(stringArraySecondPlusGarbage[1]);
-	
-	return theDate;
-}
-
 //Audio -- Notes and MIDI
 
 function ConvertMIDINoteNumberToFrequency (midiNoteNumber)
@@ -129,4 +103,78 @@ function pointInRect(pointX, pointY, rectX1, rectY1, rectX2, rectY2)
 	{
 		return true;
 	}
+}
+
+/**
+ * Function : dump()
+ * Arguments: The data - array,hash(associative array),object
+ *    The level - OPTIONAL
+ * Returns  : The textual representation of the array.
+ * This function was inspired by the print_r function of PHP.
+ * This will accept some data as the argument and return a
+ * text that will be a more readable version of the
+ * array/hash/object that is given.
+ * Docs: http://www.openjs.com/scripts/others/dump_function_php_print_r.php
+ */
+function dump(arr,level) {
+	var dumped_text = "";
+	if(!level) level = 0;
+	
+	//The padding given at the beginning of the line.
+	var level_padding = "";
+	for(var j=0;j<level+1;j++) level_padding += "    ";
+	
+	if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+		for(var item in arr) {
+			var value = arr[item];
+			
+			if(typeof(value) == 'object') { //If it is an array,
+				dumped_text += level_padding + "'" + item + "' ...\n";
+				dumped_text += dump(value,level+1);
+			} else {
+				dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+			}
+		}
+	} else { //Stings/Chars/Numbers etc.
+		dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+	}
+	return dumped_text;
+}
+
+//Color stuff
+// Taken from here: http://www.krazydad.com/makecolors.php
+function byte2Hex(n)
+  {
+    var nybHexString = "0123456789ABCDEF";
+    return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
+  }
+
+function RGB2Color(r,g,b)
+  {
+    return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+  }
+
+function RGB20xColor(r,g,b)
+  {
+    return '0x' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+  }
+
+function colorRainbowArray(numberOfColors,phase, htmlColor, center, width)
+{
+	returnArray = new Array();
+    if (phase == undefined) phase = 0;
+  center = 128;
+  width = 127;
+  frequency = Math.PI*2/numberOfColors;
+  for (var i = 0; i < numberOfColors; ++i)
+  {
+     red   = Math.sin(frequency*i+2+phase) * width + center;
+     green = Math.sin(frequency*i+0+phase) * width + center;
+     blue  = Math.sin(frequency*i+4+phase) * width + center;
+	if(htmlColor)
+		returnArray.push(RGB2Color(red,green,blue));
+	else
+		returnArray.push(RGB20xColor(red,green,blue));
+  }
+	return returnArray;
 }
