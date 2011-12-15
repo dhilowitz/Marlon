@@ -2,6 +2,7 @@ MARLON:
 - Get voice selection to look perfect
 - Introduce the concept of play/stop
 - Recode the playhead as a giant box
+- Introduce vertical rotation
 
 ARCHIVE:
 ✓ Sign up for github @done
