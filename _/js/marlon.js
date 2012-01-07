@@ -419,24 +419,14 @@ Marlon.prototype.toggleNote = function (voice, note, step) {
 
 	// If the note is on, we need to turn it off
 	// Go through all of the notes for this voice and see if any of them match the note and step.
-	var notesFoundAndRemoved = false;
-	for(var noteIndex = 0; noteIndex < this.voices[voice].sequence.notes.length; noteIndex++) {
-		var currentNote = this.voices[voice].sequence.notes[noteIndex];
-		if(currentNote.step == step && currentNote.midiNote == note) {
-			d("About to remove a note");
-
-			// We need to turn this note off.
-			this.scene.remove(this.voices[voice].sequence.notes[noteIndex].cube);
-			
-			this.voices[voice].sequence.notes.splice(noteIndex, 1);
-			notesFoundAndRemoved = true;
-		}
-	}
-
-	if(!notesFoundAndRemoved)
-		this.addNote(voice, note, step);
+	var notesFoundAndRemoved = this.deleteNote(voice, note, step);
 	
-	return;
+	if(notesFoundAndRemoved) {
+		return 'delete';
+	} else if(!notesFoundAndRemoved) {
+		this.addNote(voice, note, step);
+		return 'add';
+	}
 }
 
 Marlon.prototype.positionCube = function(cube, voice, note, step) {
@@ -446,8 +436,13 @@ Marlon.prototype.positionCube = function(cube, voice, note, step) {
 	cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);		
 }
 
-Marlon.prototype.addNote = function (voice, note, step) {
-	d("Adding a new note!!!");
+Marlon.prototype.addNote = function (voice, note, step, preventDuplicates) {
+	if(preventDuplicates != true) preventDuplicates = false;
+	
+	if(preventDuplicates == true) {
+		if(this.findNote(voice, note, step) == true)
+			return;
+	}
 
 	var newNote = new Note(note, step);
 	var voiceColor = this.voices[voice].color;
@@ -459,6 +454,37 @@ Marlon.prototype.addNote = function (voice, note, step) {
 	this.voices[voice].sequence.notes.push(newNote);
 	
 	this.scene.add( newNote.cube );
+}
+
+Marlon.prototype.findNote = function (voice, note, step) {
+	// Go through all of the notes for this voice and see if any of them match the note and step.
+	var notesFoundAndRemoved = false;
+	for(var noteIndex = 0; noteIndex < this.voices[voice].sequence.notes.length; noteIndex++) {
+		var currentNote = this.voices[voice].sequence.notes[noteIndex];
+		if(currentNote.step == step && currentNote.midiNote == note) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+Marlon.prototype.deleteNote = function (voice, note, step) {
+	// Go through all of the notes for this voice and see if any of them match the note and step.
+	var notesFoundAndRemoved = false;
+	for(var noteIndex = 0; noteIndex < this.voices[voice].sequence.notes.length; noteIndex++) {
+		var currentNote = this.voices[voice].sequence.notes[noteIndex];
+		if(currentNote.step == step && currentNote.midiNote == note) {
+			d("About to remove a note");
+
+			// We need to turn this note off.
+			this.scene.remove(this.voices[voice].sequence.notes[noteIndex].cube);
+			this.voices[voice].sequence.notes.splice(noteIndex, 1);
+			notesFoundAndRemoved = true;
+		}
+	}
+	
+	return notesFoundAndRemoved;
 }
 
 Marlon.prototype.onKeyDown = function(event) {
@@ -480,8 +506,15 @@ Marlon.prototype.onKeyDown = function(event) {
 			}
 			
 			if(event.shiftKey == true) {
-				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				if(this.shiftMeans == 'add') {
+					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
+				} else if (this.shiftMeans == 'delete') {
+					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
+				} else {
+					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				}
 			}
+			
 			event.preventDefault();
 			break;
 		case 39: //right arrow
@@ -491,8 +524,15 @@ Marlon.prototype.onKeyDown = function(event) {
 			}
 			
 			if(event.shiftKey == true) {
-				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				if(this.shiftMeans == 'add') {
+					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
+				} else if (this.shiftMeans == 'delete') {
+					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
+				} else {
+					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				}
 			}
+			
 			event.preventDefault();
 			break;
 		case 38: //up arrow
@@ -502,9 +542,14 @@ Marlon.prototype.onKeyDown = function(event) {
 			}
 				
 			if(event.shiftKey == true) {
-				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				if(this.shiftMeans == 'add') {
+					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
+				} else if (this.shiftMeans == 'delete') {
+					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
+				} else {
+					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				}
 			}
-
 			event.preventDefault();
 			break;
 		case 40: // down arrow
@@ -514,7 +559,13 @@ Marlon.prototype.onKeyDown = function(event) {
 			}
 			
 			if(event.shiftKey == true) {
-				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				if(this.shiftMeans == 'add') {
+					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
+				} else if (this.shiftMeans == 'delete') {
+					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
+				} else {
+					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+				}
 			}
 				
 			event.preventDefault();
@@ -525,9 +576,12 @@ Marlon.prototype.onKeyDown = function(event) {
 			event.preventDefault();
 			break;
 		case 16:
+			this.shiftMeans = this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+			event.preventDefault();
+			break;
+			
 		case 32: //space bar
 			this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-				
 			event.preventDefault();
 			break;
 		case 88: // 'x' arrow

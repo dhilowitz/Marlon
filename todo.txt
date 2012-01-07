@@ -1,6 +1,6 @@
 MARLON:
-- SetupCubes should use the AddNote function
-- The SHIFT key should be usable to "paint" notes onto the grid
+✓ SetupCubes should use the AddNote function @done
+✓ The SHIFT key should be usable to "paint" notes onto the grid @done
 - Get voice selection to look perfect
 	- Try switching the way the voice selection and the playhead look...hmm. not sure. 	
 	
