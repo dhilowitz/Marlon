@@ -2,7 +2,7 @@
 // Global parameters
 
 // Set some camera attributes
-var CAMERA_DIST = 700; 
+var CAMERA_DIST = 1; 
 var CAMERA_ROTATION_STEP_AMOUNT = 5; // This is in degrees. 
 
 // Set world dimensions
@@ -609,30 +609,35 @@ Marlon.prototype.onKeyDown = function(event) {
 		case 48: // '0' arrow
 			this.rotationDegreesHorizontal = -45;
 			this.cameraHeight = 290;
+			CAMERA_DIST = 700;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 49: // '1' arrow
 			this.setHorizontalRotation(0);
 			this.cameraHeight = 860;
+			CAMERA_DIST = 1;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 50: // '2' arrow
 			this.setHorizontalRotation(90);
 			this.cameraHeight = 860;
+			CAMERA_DIST = 1;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 51: // '3' arrow
 			this.setHorizontalRotation(180);
 			this.cameraHeight = 860;
+			CAMERA_DIST = 1;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 52: // '4' arrow
 			this.setHorizontalRotation(270);
 			this.cameraHeight = 860;
+			CAMERA_DIST = 1;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;

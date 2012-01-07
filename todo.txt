@@ -1,7 +1,10 @@
 MARLON:
 - Get voice selection to look perfect
-	- Try switching the way the voice selection and the playhead look...hmm. not sure. 
-	- Try making all of the notes on non-current layers wireframe.	
+	✓ Try switching the way the voice selection and the playhead look...hmm. not sure. 
+	✓ Try making all of the notes on non-current layers wireframe.	
+	It looks less good...but it's *way* more usable.
+	- Try adding an outline around the active material.
+	- Try adding a grid to use when in top-down mode.
 - Introduce the concept of play/stop
 - Introduce vertical rotation
 
