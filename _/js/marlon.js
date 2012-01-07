@@ -24,15 +24,11 @@ function Note(midiNote, step) {
 		if(typeof(this.cube) != 'undefined') {
 			this.cube.visible = true;
 			return this.cube;
-		}
+		} else return false;	
+	}
 	
+	this.createCube = function(material) {
 		// Get the note color & material
-		var material = new THREE.MeshBasicMaterial({
-				        color: cubeColor,
-				        opacity: 0.7,
-				        wireframe: false
-				    })
-		
 		var geometry = new THREE.CubeGeometry(SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH);
 		this.cube = new THREE.Mesh( geometry, material );
 		
@@ -48,8 +44,19 @@ function Voice(voiceNumber)
 {
 	this.voiceNumber = voiceNumber;
 	this.sequence = new Sequence();
-	this.color = 0xFF0000;
+	this.color = VOICE_COLORS[voiceNumber];
 	
+	this.activeMaterial = new THREE.MeshBasicMaterial( { 
+		color: this.color, 
+		wireframe: false,
+		opacity: 0.7 } );
+
+	this.dimMaterial = new THREE.MeshBasicMaterial( { 
+		color: 0x336666, 
+		//color: this.color,
+		wireframe: true,
+		opacity: 0.5 } );
+
 }
 
 Marlon.prototype.setupVoices = function () {
@@ -59,6 +66,7 @@ Marlon.prototype.setupVoices = function () {
 	{
 		this.voices[i] = new Voice(i);
 		this.voices[i].color = VOICE_COLORS[i];
+		this.voices[i].activeMaterial
 	}
 	
 	//Fake Data
@@ -95,6 +103,7 @@ function Marlon (marlonCanvasID)
 	this.currentVoice = 0;
 	this.currentStep = 0;
 	this.currentNote = SCALE_BASE_NOTE;
+	this.debugAxesOn = false;
 
 	
 	this.init(marlonCanvasID);
@@ -129,26 +138,16 @@ Marlon.prototype.dimAndUndimNotes = function() {
 	
 	for(var i=0; i<NUMBER_OF_VOICES;i++)
 	{
+		var newMaterial;
 		if(i == this.currentVoice) {
-			currentColor = 0x336666;
-			currentColor = VOICE_COLORS[i];
-			opacity = 0.7;
-			visible = true;
-			wireframe = false;
+			newMaterial = this.voices[i].activeMaterial;
 		} else {
-			currentColor = 0x336666;
-			currentColor = VOICE_COLORS[i];
-			opacity = 0.2;
-			visible = true;
-			wireframe = false;
+			newMaterial = this.voices[i].dimMaterial;
 		}
-		
-		var material = new THREE.MeshBasicMaterial( { color: currentColor, wireframe: wireframe,opacity: opacity } );
-		
 		
 		for(var noteIndex = 0; noteIndex<this.voices[i].sequence.notes.length; noteIndex++)
 		{	
-			this.voices[i].sequence.notes[noteIndex].cube.material = material;
+			this.voices[i].sequence.notes[noteIndex].cube.material = newMaterial;
 		}
 	}
 }
@@ -336,8 +335,9 @@ Marlon.prototype.setupCubes = function() {
 		for(var noteIndex=0; noteIndex < currentVoice.sequence.notes.length; noteIndex++)
 		{
 			currentNote = currentVoice.sequence.notes[noteIndex];
-			currentNote.getCube(currentVoice.color);
-
+			if(currentNote.getCube() == false)
+				currentNote.createCube(currentVoice.activeMaterial);
+			
 			this.positionCube(currentNote.cube, voiceIndex, currentNote.midiNote, currentNote.step);
 			
 		    this.scene.add( currentNote.cube );
@@ -375,6 +375,16 @@ Marlon.prototype.movePlayhead =  function() {
 	this.playheadPosition = (this.playheadPosition < 15) ? this.playheadPosition + 1:0;
 }
 
+Marlon.prototype.setHorizontalRotation = function(degrees) {
+	degrees = degrees % 360;
+	if(degrees < -225)
+		degrees += 360;
+	if(degrees > 135)
+		degrees -= 360;
+	
+	this.rotationDegreesHorizontal = degrees;
+}
+
 Marlon.prototype.setupEventHandlers = function() {
 	var thisObject = this;
 	$(document.body).keydown(function(event) {thisObject.onKeyDown(event);});
@@ -403,16 +413,6 @@ Marlon.prototype.onMouseMove = function (event)
 	var mouseXDelta = (this.mouseX - this.mouseXOnMouseDown);
 	this.setHorizontalRotation(this.rotationDegreesHorizontalOnMouseDown - (mouseXDelta * mouseRotationSensitivity));
 	this.calculateCameraPosition();
-}
-
-Marlon.prototype.setHorizontalRotation = function(degrees) {
-	degrees = degrees % 360;
-	if(degrees < -225)
-		degrees += 360;
-	if(degrees > 135)
-		degrees -= 360;
-	
-	this.rotationDegreesHorizontal = degrees;
 }
 
 Marlon.prototype.onMouseUp = function (event)
@@ -459,7 +459,8 @@ Marlon.prototype.addNote = function (voice, note, step, preventDuplicates) {
 	var newNote = new Note(note, step);
 	var voiceColor = this.voices[voice].color;
 	
-	newNote.getCube(voiceColor);
+	if(newNote.getCube() == false)
+		newNote.createCube(this.voices[voice].activeMaterial);
 	
 	this.positionCube(newNote.cube, voice, note, step);
 	
@@ -696,6 +697,8 @@ Marlon.prototype.onKeyDown = function(event) {
 }
 
 Marlon.prototype.drawDebugAxes = function(){
+	if(!this.debugAxesOn) return;
+	
 	           
     //Axes array[x,y,z]
     var axisLength = 800;
