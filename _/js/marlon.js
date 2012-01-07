@@ -474,24 +474,48 @@ Marlon.prototype.onKeyDown = function(event) {
 			event.preventDefault();
 			break;
 		case 37: //left arrow
-			if(this.currentStep  > 0)
-				{this.currentStep--;	this.calculateCursorPosition();}
+			if(this.currentStep  > 0) {
+				this.currentStep--;	
+				this.calculateCursorPosition();
+			}
+			
+			if(event.shiftKey == true) {
+				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+			}
 			event.preventDefault();
 			break;
 		case 39: //right arrow
-			if(this.currentStep + 1 < NUMBER_OF_SEQUENCE_STEPS)
-				{this.currentStep++;	this.calculateCursorPosition();}
+			if(this.currentStep + 1 < NUMBER_OF_SEQUENCE_STEPS) {
+				this.currentStep++;	
+				this.calculateCursorPosition();
+			}
+			
+			if(event.shiftKey == true) {
+				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+			}
 			event.preventDefault();
 			break;
 		case 38: //up arrow
+			if(this.currentNote + 1 < NUMBER_OF_GRID_NOTES + SCALE_BASE_NOTE) {
+				this.currentNote++;	
+				this.calculateCursorPosition();
+			}
+				
+			if(event.shiftKey == true) {
+				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+			}
 
-			if(this.currentNote + 1 < NUMBER_OF_GRID_NOTES + SCALE_BASE_NOTE)
-				{this.currentNote++;	this.calculateCursorPosition();}
 			event.preventDefault();
 			break;
 		case 40: // down arrow
-			if(this.currentNote > SCALE_BASE_NOTE) 
-			{this.currentNote--;	this.calculateCursorPosition();}
+			if(this.currentNote > SCALE_BASE_NOTE){
+				this.currentNote--;	
+				this.calculateCursorPosition();
+			}
+			
+			if(event.shiftKey == true) {
+				this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+			}
 				
 			event.preventDefault();
 			break;
