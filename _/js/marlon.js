@@ -296,7 +296,7 @@ Marlon.prototype.init = function (marlonCanvasID) {
 	
 	// Setup camera
 	this.camera = new THREE.PerspectiveCamera(45, this.WIDTH / this.HEIGHT, 1, 2000);
-	this.camera.position.y = 290;
+	this.camera.position.y = this.cameraHeight = 290;
 	this.camera.rotation.x = -45 * (Math.PI / 180);
     this.scene.add( this.camera );
 
@@ -360,6 +360,8 @@ Marlon.prototype.calculateCameraPosition =  function() {
 	
 	this.camera.position.x = CAMERA_DIST * Math.sin(radiansHorizontal) + GRID_WIDTH/2;
 	this.camera.position.z = CAMERA_DIST * Math.cos(radiansHorizontal) + GRID_DEPTH/2;
+	
+	this.camera.position.y = this.cameraHeight;
 	
 	//this.camera.position.y = CAMERA_DIST * Math.sin(radiansVertical) + GRID_WIDTH/2;
 	//this.camera.position.z = CAMERA_DIST * Math.cos(radiansVertical) + GRID_DEPTH/2;
@@ -636,12 +638,14 @@ Marlon.prototype.onKeyDown = function(event) {
 				event.preventDefault();
 				break;
 		case 189: // '-' key
-			this.rotationDegreesVertical -= CAMERA_ROTATION_STEP_AMOUNT;
+			//this.rotationDegreesVertical -= CAMERA_ROTATION_STEP_AMOUNT;
+			this.cameraHeight -= 10;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 187: // '+' key
-			this.rotationDegreesVertical += CAMERA_ROTATION_STEP_AMOUNT;
+			//this.rotationDegreesVertical += CAMERA_ROTATION_STEP_AMOUNT;
+			this.cameraHeight += 10;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
