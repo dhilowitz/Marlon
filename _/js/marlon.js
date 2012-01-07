@@ -89,7 +89,7 @@ function Marlon (marlonCanvasID)
 	this.WIDTH = window.innerWidth - 0;
 	this.HEIGHT = window.innerHeight - 0;
 	
-	this.rotationDegreesHorizontal = -45;
+	this.rotationDegreesHorizontal = 0;
 	this.rotationDegreesVertical = 45;
 	this.playheadPosition = 0;
 	this.currentVoice = 0;
@@ -157,7 +157,6 @@ Marlon.prototype.setupCursor = function() {
 	var geometry = new THREE.CubeGeometry( SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH );
     var material = new THREE.MeshBasicMaterial( { color: 0x336666, wireframe: false,opacity: 0.7 } );
 	this.cursorCube = new THREE.Mesh( geometry, material );
-//	this.cursorCube.rotation.x = -Math.PI/2;
 	this.scene.add( this.cursorCube);
 	
 	this.calculateCursorPosition();
@@ -296,8 +295,8 @@ Marlon.prototype.init = function (marlonCanvasID) {
 	
 	// Setup camera
 	this.camera = new THREE.PerspectiveCamera(45, this.WIDTH / this.HEIGHT, 1, 2000);
-	this.camera.position.y = this.cameraHeight = 290;
-	this.camera.rotation.x = -45 * (Math.PI / 180);
+	this.camera.position.y = this.cameraHeight = 860;
+	this.camera.rotation.x = this.rotationDegreesHorizontal * (Math.PI / 180);
     this.scene.add( this.camera );
 
     this.drawGrid();
@@ -608,6 +607,31 @@ Marlon.prototype.onKeyDown = function(event) {
 			break;
 		case 48: // '0' arrow
 			this.rotationDegreesHorizontal = -45;
+			this.cameraHeight = 290;
+			this.calculateCameraPosition();
+			event.preventDefault();
+			break;
+		case 49: // '1' arrow
+			this.setHorizontalRotation(0);
+			this.cameraHeight = 860;
+			this.calculateCameraPosition();
+			event.preventDefault();
+			break;
+		case 50: // '2' arrow
+			this.setHorizontalRotation(90);
+			this.cameraHeight = 860;
+			this.calculateCameraPosition();
+			event.preventDefault();
+			break;
+		case 51: // '3' arrow
+			this.setHorizontalRotation(180);
+			this.cameraHeight = 860;
+			this.calculateCameraPosition();
+			event.preventDefault();
+			break;
+		case 52: // '4' arrow
+			this.setHorizontalRotation(270);
+			this.cameraHeight = 860;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
