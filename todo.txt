@@ -1,13 +1,14 @@
 MARLON:
-✓ SetupCubes should use the AddNote function @done
-✓ The SHIFT key should be usable to "paint" notes onto the grid @done
+✓ When we rotate, the controls should shift to match what we're seeing. @done
+
 - Get voice selection to look perfect
 	- Try switching the way the voice selection and the playhead look...hmm. not sure. 	
-	
 - Introduce the concept of play/stop
 - Introduce vertical rotation
 
 ARCHIVE:
+✓ SetupCubes should use the AddNote function @done
+✓ The SHIFT key should be usable to "paint" notes onto the grid @done
 ✓ Have multiple notes per step be possible @done
 ✓ Sign up for github @done
 ✓ Add this project to github @done

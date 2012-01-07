@@ -164,6 +164,7 @@ Marlon.prototype.setupCursor = function() {
 }
 
 Marlon.prototype.setupPlayhead = function() {
+	return;
 	var geometry = new THREE.CubeGeometry( SEQUENCER_STEP_WIDTH, 
 		NUMBER_OF_VOICES * SEQUENCER_STEP_WIDTH, //Height
 		NUMBER_OF_GRID_NOTES * SEQUENCER_STEP_WIDTH);
@@ -399,8 +400,18 @@ Marlon.prototype.onMouseMove = function (event)
 	this.mouseX = event.pageX;
 	var mouseRotationSensitivity = 0.2;
 	var mouseXDelta = (this.mouseX - this.mouseXOnMouseDown);
-	this.rotationDegreesHorizontal = this.rotationDegreesHorizontalOnMouseDown - (mouseXDelta * mouseRotationSensitivity);// * -0.12;
+	this.setHorizontalRotation(this.rotationDegreesHorizontalOnMouseDown - (mouseXDelta * mouseRotationSensitivity));
 	this.calculateCameraPosition();
+}
+
+Marlon.prototype.setHorizontalRotation = function(degrees) {
+	degrees = degrees % 360;
+	if(degrees < -225)
+		degrees += 360;
+	if(degrees > 135)
+		degrees -= 360;
+	
+	this.rotationDegreesHorizontal = degrees;
 }
 
 Marlon.prototype.onMouseUp = function (event)
@@ -487,86 +498,109 @@ Marlon.prototype.deleteNote = function (voice, note, step) {
 	return notesFoundAndRemoved;
 }
 
+Marlon.prototype.handleShiftKey = function() {
+	if(this.shiftMeans == 'add') {
+		this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
+	} else if (this.shiftMeans == 'delete') {
+		this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
+	} else {
+		this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
+	}
+}
+
+Marlon.prototype.moveCurrentStepUp = function() {
+	if(this.currentStep + 1 < NUMBER_OF_SEQUENCE_STEPS) {
+		this.currentStep++;	
+		this.calculateCursorPosition();
+	}
+}
+
+Marlon.prototype.moveCurrentStepDown = function() {
+	if(this.currentStep  > 0) {
+		this.currentStep--;	
+		this.calculateCursorPosition();
+	}
+}
+
+Marlon.prototype.moveCurrentNoteUp = function() {
+	if(this.currentNote + 1 < NUMBER_OF_GRID_NOTES + SCALE_BASE_NOTE) {
+		this.currentNote++;	
+		this.calculateCursorPosition();
+	}
+}
+
+Marlon.prototype.moveCurrentNoteDown = function() {
+	if(this.currentNote > SCALE_BASE_NOTE){
+		this.currentNote--;	
+		this.calculateCursorPosition();
+	}
+}
+
 Marlon.prototype.onKeyDown = function(event) {
 	switch(event.which) {
 		case 188: //',' key
-			this.rotationDegreesHorizontal -= CAMERA_ROTATION_STEP_AMOUNT;
+			this.setHorizontalRotation(this.rotationDegreesHorizontal - CAMERA_ROTATION_STEP_AMOUNT);
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 190: //'.' key
-			this.rotationDegreesHorizontal += CAMERA_ROTATION_STEP_AMOUNT;
+			this.setHorizontalRotation(this.rotationDegreesHorizontal + CAMERA_ROTATION_STEP_AMOUNT);
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 37: //left arrow
-			if(this.currentStep  > 0) {
-				this.currentStep--;	
-				this.calculateCursorPosition();
-			}
-			
-			if(event.shiftKey == true) {
-				if(this.shiftMeans == 'add') {
-					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
-				} else if (this.shiftMeans == 'delete') {
-					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
-				} else {
-					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-				}
-			}
+			if(this.rotationDegreesHorizontal >= -225 && this.rotationDegreesHorizontal < -135)
+				this.moveCurrentStepUp();
+			if(this.rotationDegreesHorizontal >= -135 && this.rotationDegreesHorizontal < -45)
+				this.moveCurrentNoteUp();
+			if(this.rotationDegreesHorizontal >= -45 && this.rotationDegreesHorizontal < 45)
+				this.moveCurrentStepDown();
+			if(this.rotationDegreesHorizontal >= 45 && this.rotationDegreesHorizontal < 135)
+				this.moveCurrentNoteDown();
+					
+			if(event.shiftKey) this.handleShiftKey();
 			
 			event.preventDefault();
 			break;
 		case 39: //right arrow
-			if(this.currentStep + 1 < NUMBER_OF_SEQUENCE_STEPS) {
-				this.currentStep++;	
-				this.calculateCursorPosition();
-			}
+			if(this.rotationDegreesHorizontal >= -225 && this.rotationDegreesHorizontal < -135)
+				this.moveCurrentStepDown();
+			if(this.rotationDegreesHorizontal >= -135 && this.rotationDegreesHorizontal < -45)
+				this.moveCurrentNoteDown();
+			if(this.rotationDegreesHorizontal >= -45 && this.rotationDegreesHorizontal < 45)
+				this.moveCurrentStepUp();
+			if(this.rotationDegreesHorizontal >= 45 && this.rotationDegreesHorizontal < 135)
+				this.moveCurrentNoteUp();
 			
-			if(event.shiftKey == true) {
-				if(this.shiftMeans == 'add') {
-					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
-				} else if (this.shiftMeans == 'delete') {
-					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
-				} else {
-					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-				}
-			}
+			if(event.shiftKey) this.handleShiftKey();
 			
 			event.preventDefault();
 			break;
 		case 38: //up arrow
-			if(this.currentNote + 1 < NUMBER_OF_GRID_NOTES + SCALE_BASE_NOTE) {
-				this.currentNote++;	
-				this.calculateCursorPosition();
-			}
+			if(this.rotationDegreesHorizontal >= -225 && this.rotationDegreesHorizontal < -135)
+				this.moveCurrentNoteDown();
+			if(this.rotationDegreesHorizontal >= -135 && this.rotationDegreesHorizontal < -45)
+				this.moveCurrentStepUp();
+			if(this.rotationDegreesHorizontal >= -45 && this.rotationDegreesHorizontal < 45)
+				this.moveCurrentNoteUp();
+			if(this.rotationDegreesHorizontal >= 45 && this.rotationDegreesHorizontal < 135)
+				this.moveCurrentStepDown();
 				
-			if(event.shiftKey == true) {
-				if(this.shiftMeans == 'add') {
-					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
-				} else if (this.shiftMeans == 'delete') {
-					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
-				} else {
-					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-				}
-			}
+			if(event.shiftKey) this.handleShiftKey();
+			
 			event.preventDefault();
 			break;
 		case 40: // down arrow
-			if(this.currentNote > SCALE_BASE_NOTE){
-				this.currentNote--;	
-				this.calculateCursorPosition();
-			}
+			if(this.rotationDegreesHorizontal >= -225 && this.rotationDegreesHorizontal < -135)
+				this.moveCurrentNoteUp();
+			if(this.rotationDegreesHorizontal >= -135 && this.rotationDegreesHorizontal < -45)
+				this.moveCurrentStepDown();
+			if(this.rotationDegreesHorizontal >= -45 && this.rotationDegreesHorizontal < 45)
+				this.moveCurrentNoteDown();
+			if(this.rotationDegreesHorizontal >= 45 && this.rotationDegreesHorizontal < 135)
+				this.moveCurrentStepUp();
 			
-			if(event.shiftKey == true) {
-				if(this.shiftMeans == 'add') {
-					this.addNote(this.currentVoice, this.currentNote, this.currentStep, true);
-				} else if (this.shiftMeans == 'delete') {
-					this.deleteNote(this.currentVoice, this.currentNote, this.currentStep);
-				} else {
-					this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-				}
-			}
+			if(event.shiftKey) this.handleShiftKey();
 				
 			event.preventDefault();
 			break;
