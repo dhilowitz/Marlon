@@ -23,6 +23,11 @@ function Note(on, midiNote, step) {
 	this.cube;
 	
 	this.getCube = function(cubeColor) {
+		if(typeof(this.cube) != 'undefined') {
+			this.cube.visible = true;
+			return this.cube;
+		}
+	
 		// Get the note color & material
 		var material = new THREE.MeshBasicMaterial({
 				        color: cubeColor,
@@ -59,8 +64,6 @@ Marlon.prototype.setupVoices = function () {
 		for(var noteIndex = 0; noteIndex < this.voices[i].sequence.notes.length; noteIndex++) {
 			this.voices[i].sequence.notes[noteIndex].on=true;
 		}
-		
-		//this.voices[i].sequence.notes[i].midiNote=SCALE_BASE_NOTE+i;
 	}
 	
 	//Fake Data
@@ -337,27 +340,9 @@ Marlon.prototype.setupCubes = function() {
 		for(var noteIndex=0; noteIndex < currentVoice.sequence.notes.length; noteIndex++)
 		{
 			currentNote = currentVoice.sequence.notes[noteIndex];
-			
-			//Cube
-			var material = new THREE.MeshBasicMaterial({
-			        color: currentVoice.color,
-			        opacity: 0.7,
-			        wireframe: false
-			    })
-			
-			if(typeof(currentNote.cube) == 'undefined') {
-				var geometry = new THREE.CubeGeometry(SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH);
-		    	currentNote.cube = new THREE.Mesh( geometry, material );
-			} else{
-			
-				currentNote.cube.visible = true;
-			}
-			currentNote.cube.position.x = (SEQUENCER_STEP_WIDTH/2) + currentNote.step * SEQUENCER_STEP_WIDTH;// - (256/2);
-			currentNote.cube.position.y = (SEQUENCER_STEP_WIDTH/2) + voiceIndex * SEQUENCER_STEP_WIDTH;
-			currentVoice.sequence.notes[noteIndex].cube = currentNote.cube;
-			
-			var adjustedNote = currentNote.midiNote - SCALE_BASE_NOTE;
-			currentNote.cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);
+			currentNote.getCube(currentVoice.color);
+
+			this.positionCube(currentNote.cube, voiceIndex, currentNote.midiNote, currentNote.step);
 			
 		    this.scene.add( currentNote.cube );
 		}
@@ -457,12 +442,14 @@ Marlon.prototype.toggleNote = function (voice, note, step) {
 	
 	return;
 }
+
 Marlon.prototype.positionCube = function(cube, voice, note, step) {
 	cube.position.x = (SEQUENCER_STEP_WIDTH/2) + step * SEQUENCER_STEP_WIDTH;// - (256/2);
 	cube.position.y = (SEQUENCER_STEP_WIDTH/2) + voice * SEQUENCER_STEP_WIDTH;
 	var adjustedNote = note - SCALE_BASE_NOTE;
 	cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);		
 }
+
 Marlon.prototype.addNote = function (voice, note, step) {
 	d("Adding a new note!!!");
 
@@ -517,9 +504,9 @@ Marlon.prototype.onKeyDown = function(event) {
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
+		case 16:
 		case 32: //space bar
 			this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-			//this.setupCubes();
 				
 			event.preventDefault();
 			break;
@@ -572,7 +559,8 @@ Marlon.prototype.onKeyDown = function(event) {
 
 }
 
-Marlon.prototype.drawDebugAxes = function(){           
+Marlon.prototype.drawDebugAxes = function(){
+	           
     //Axes array[x,y,z]
     var axisLength = 800;
     
