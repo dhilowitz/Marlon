@@ -15,8 +15,7 @@ var GRID_DEPTH = NUMBER_OF_GRID_NOTES * SEQUENCER_STEP_WIDTH;
 var VOICE_COLORS = colorRainbowArray(NUMBER_OF_VOICES*2,0, false, 128, 127);
 var SCALE_BASE_NOTE = 57;
 
-function Note(on, midiNote, step) {
-	this.on = on;
+function Note(midiNote, step) {
 	this.midiNote = midiNote;
 	this.step = step;
 	this.velocity 
@@ -61,31 +60,28 @@ Marlon.prototype.setupVoices = function () {
 	{
 		this.voices[i] = new Voice(i);
 		this.voices[i].color = VOICE_COLORS[i];
-		for(var noteIndex = 0; noteIndex < this.voices[i].sequence.notes.length; noteIndex++) {
-			this.voices[i].sequence.notes[noteIndex].on=true;
-		}
 	}
 	
 	//Fake Data
-	this.voices[0].sequence.notes.push(new Note(true, 57, 0));
-	this.voices[0].sequence.notes.push(new Note(true, 57, 4));
-	this.voices[0].sequence.notes.push(new Note(true, 57, 8));
-	this.voices[0].sequence.notes.push(new Note(true, 57, 12));
+	this.voices[0].sequence.notes.push(new Note(57, 0));
+	this.voices[0].sequence.notes.push(new Note(57, 4));
+	this.voices[0].sequence.notes.push(new Note(57, 8));
+	this.voices[0].sequence.notes.push(new Note(57, 12));
 	
-	this.voices[1].sequence.notes.push(new Note(true, 57, 0));
-	this.voices[1].sequence.notes.push(new Note(true, 57+12, 4));
-	this.voices[1].sequence.notes.push(new Note(true, 57, 8));
-	this.voices[1].sequence.notes.push(new Note(true, 57+12, 12));
+	this.voices[1].sequence.notes.push(new Note(57, 0));
+	this.voices[1].sequence.notes.push(new Note(57+12, 4));
+	this.voices[1].sequence.notes.push(new Note(57, 8));
+	this.voices[1].sequence.notes.push(new Note(57+12, 12));
 	
-	this.voices[2].sequence.notes.push(new Note(true, 58, 3));
-	this.voices[2].sequence.notes.push(new Note(true, 58, 7));
-	this.voices[2].sequence.notes.push(new Note(true, 58, 11));
-	this.voices[2].sequence.notes.push(new Note(true, 58, 15));
+	this.voices[2].sequence.notes.push(new Note(58, 3));
+	this.voices[2].sequence.notes.push(new Note(58, 7));
+	this.voices[2].sequence.notes.push(new Note(58, 11));
+	this.voices[2].sequence.notes.push(new Note(58, 15));
 	
-	this.voices[3].sequence.notes.push(new Note(true, 61, 2));
-	this.voices[3].sequence.notes.push(new Note(true, 61, 6));
-	this.voices[3].sequence.notes.push(new Note(true, 61, 10));
-	this.voices[3].sequence.notes.push(new Note(true, 61, 14));
+	this.voices[3].sequence.notes.push(new Note(61, 2));
+	this.voices[3].sequence.notes.push(new Note(61, 6));
+	this.voices[3].sequence.notes.push(new Note(61, 10));
+	this.voices[3].sequence.notes.push(new Note(61, 14));
 }
 
 
@@ -288,7 +284,7 @@ Marlon.prototype.init = function (marlonCanvasID) {
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 	
-	
+	// Set up stats
 	this.stats = new Stats();
 	this.stats.domElement.style.position = 'absolute';
 	this.stats.domElement.style.top = '0px';
@@ -298,6 +294,7 @@ Marlon.prototype.init = function (marlonCanvasID) {
 
 	this.drawDebugAxes();	
 	
+	// Setup camera
 	this.camera = new THREE.PerspectiveCamera(45, this.WIDTH / this.HEIGHT, 1, 2000);
 	this.camera.position.y = 290;
 	this.camera.rotation.x = -45 * (Math.PI / 180);
@@ -453,7 +450,7 @@ Marlon.prototype.positionCube = function(cube, voice, note, step) {
 Marlon.prototype.addNote = function (voice, note, step) {
 	d("Adding a new note!!!");
 
-	var newNote = new Note(true, note, step);
+	var newNote = new Note(note, step);
 	var voiceColor = this.voices[voice].color;
 	
 	newNote.getCube(voiceColor);
