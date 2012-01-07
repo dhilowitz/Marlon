@@ -18,7 +18,6 @@ var SCALE_BASE_NOTE = 57;
 function Note(midiNote, step) {
 	this.midiNote = midiNote;
 	this.step = step;
-	this.velocity 
 	this.cube;
 	
 	this.getCube = function(cubeColor) {
