@@ -1,5 +1,6 @@
 MARLON:
-✓ Have multiple notes per step be possible @done
+- SetupCubes should use the AddNote function
+- The SHIFT key should be usable to "paint" notes onto the grid
 - Get voice selection to look perfect
 	- Try switching the way the voice selection and the playhead look...hmm. not sure. 	
 	
@@ -7,6 +8,7 @@ MARLON:
 - Introduce vertical rotation
 
 ARCHIVE:
+✓ Have multiple notes per step be possible @done
 ✓ Sign up for github @done
 ✓ Add this project to github @done
 ✓ Make an object-orient version of test.html @done

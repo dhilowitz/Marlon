@@ -21,6 +21,20 @@ function Note(on, midiNote, step) {
 	this.step = step;
 	this.velocity 
 	this.cube;
+	
+	this.getCube = function(cubeColor) {
+		// Get the note color & material
+		var material = new THREE.MeshBasicMaterial({
+				        color: cubeColor,
+				        opacity: 0.7,
+				        wireframe: false
+				    })
+		
+		var geometry = new THREE.CubeGeometry(SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH);
+		this.cube = new THREE.Mesh( geometry, material );
+		
+		return this.cube;
+	}
 }
 
 function Sequence() {
@@ -352,9 +366,6 @@ Marlon.prototype.setupCubes = function() {
 }
 
 Marlon.prototype.render =  function() {
-//	this.movePlayhead(); this.calculatePlayheadPosition();
-//	this.rotationDegreesHorizontal += 1;
-//	this.calculateCameraPosition();
 	this.renderer.render( this.scene, this.camera );
 	this.stats.update();
 }
@@ -446,27 +457,21 @@ Marlon.prototype.toggleNote = function (voice, note, step) {
 	
 	return;
 }
-
+Marlon.prototype.positionCube = function(cube, voice, note, step) {
+	cube.position.x = (SEQUENCER_STEP_WIDTH/2) + step * SEQUENCER_STEP_WIDTH;// - (256/2);
+	cube.position.y = (SEQUENCER_STEP_WIDTH/2) + voice * SEQUENCER_STEP_WIDTH;
+	var adjustedNote = note - SCALE_BASE_NOTE;
+	cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);		
+}
 Marlon.prototype.addNote = function (voice, note, step) {
 	d("Adding a new note!!!");
 
 	var newNote = new Note(true, note, step);
+	var voiceColor = this.voices[voice].color;
 	
-	// Get the note color & material
-	var currentVoice = this.voices[voice];
-	var material = new THREE.MeshBasicMaterial({
-			        color: currentVoice.color,
-			        opacity: 0.7,
-			        wireframe: false
-			    })
+	newNote.getCube(voiceColor);
 	
-	var geometry = new THREE.CubeGeometry(SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH, SEQUENCER_STEP_WIDTH);
-	newNote.cube = new THREE.Mesh( geometry, material );
-	
-	newNote.cube.position.x = (SEQUENCER_STEP_WIDTH/2) + newNote.step * SEQUENCER_STEP_WIDTH;// - (256/2);
-	newNote.cube.position.y = (SEQUENCER_STEP_WIDTH/2) + voice * SEQUENCER_STEP_WIDTH;
-	var adjustedNote = newNote.midiNote - SCALE_BASE_NOTE;
-	newNote.cube.position.z = GRID_DEPTH - (SEQUENCER_STEP_WIDTH/2) - (adjustedNote * SEQUENCER_STEP_WIDTH);
+	this.positionCube(newNote.cube, voice, note, step);
 	
 	this.voices[voice].sequence.notes.push(newNote);
 	
