@@ -1,7 +1,9 @@
 MARLON:
+✓ Have multiple notes per step be possible @done
 - Get voice selection to look perfect
+	- Try switching the way the voice selection and the playhead look...hmm. not sure. 	
+	
 - Introduce the concept of play/stop
-- Recode the playhead as a giant box
 - Introduce vertical rotation
 
 ARCHIVE:
@@ -14,3 +16,4 @@ ARCHIVE:
 ✓ Start using globals instead of class variables for constants. @done
 ✓ Introduce the concept of voices @done
 ✓ Introduce the concept of notes @done
+
