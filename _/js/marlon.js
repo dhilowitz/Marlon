@@ -104,6 +104,8 @@ function Marlon (marlonCanvasID)
 	this.currentStep = 0;
 	this.currentNote = SCALE_BASE_NOTE;
 	this.debugAxesOn = false;
+	this.tempo = 120;
+	this.lastPlayheadMoveTime = Date.now();
 
 	
 	this.init(marlonCanvasID);
@@ -162,7 +164,7 @@ Marlon.prototype.setupCursor = function() {
 }
 
 Marlon.prototype.setupPlayhead = function() {
-	return;
+	//return;
 	var geometry = new THREE.CubeGeometry( SEQUENCER_STEP_WIDTH, 
 		NUMBER_OF_VOICES * SEQUENCER_STEP_WIDTH, //Height
 		NUMBER_OF_GRID_NOTES * SEQUENCER_STEP_WIDTH);
@@ -349,6 +351,29 @@ Marlon.prototype.setupCubes = function() {
 Marlon.prototype.render =  function() {
 	this.renderer.render( this.scene, this.camera );
 	this.stats.update();
+	
+	if(this.playing) {
+		// Calculate how often we should be moving the playhead
+		var secsPerBeat = (60.0 / this.tempo);
+		var secsPerSixteenth = secsPerBeat / 4.0;
+		
+		var howOften = secsPerSixteenth * 1000.0;
+		var now = Date.now();
+		
+		// Has it been the needed amount of time?
+		if(now - this.lastPlayheadMoveTime > howOften) {
+		// YES:
+			// Move playhead
+			this.movePlayhead();
+			// Set the variable that stores when we last moved the playhead
+			this.lastPlayheadMoveTime = new Date().getTime();
+			// Trigger the appropriate notes
+			// Move the actual 3D objects that are related to the 
+			this.calculatePlayheadPosition();
+		}
+		// NO:
+	}
+		// Do nothing.
 }
 
 
@@ -645,11 +670,6 @@ Marlon.prototype.onKeyDown = function(event) {
 			this.shiftMeans = this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
 			event.preventDefault();
 			break;
-			
-		case 32: //space bar
-			this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
-			event.preventDefault();
-			break;
 		case 88: // 'x' arrow
 				if(this.currentVoice < NUMBER_OF_VOICES - 1) {
 					this.currentVoice++;
@@ -679,6 +699,7 @@ Marlon.prototype.onKeyDown = function(event) {
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
+		case 32: // space bar
 		case 18: // option key
 			this.playing = !this.playing;
 			event.preventDefault();

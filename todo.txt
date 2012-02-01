@@ -4,11 +4,18 @@ MARLON:
 	✓ Try making all of the notes on non-current layers wireframe.	
 	It looks less good...but it's *way* more usable.
 	- Try adding an outline around the active material.
+		- Each note needs to consist of two cubes -- a solid cube and an outline cube.
 	- Try adding a grid to use when in top-down mode.
-- Introduce the concept of play/stop
-- Introduce vertical rotation
+✓  Introduce the concept of play/stop [2 hours] @done
+- Add actual sound generation.
+- Add a legend / key mapco [4 hours]
+- Introduce vertical rotation [1 day]
 
 ARCHIVE:
+- Get voice selection to look perfect
+	✓ Try switching the way the voice selection and the playhead look...hmm. not sure. 
+	✓ Try making all of the notes on non-current layers wireframe.	
+	It looks less good...but it's *way* more usable.
 ✓ Be able to raise and lower camera with '+' and '-' keys. @done
 ✓ When we rotate, the controls should shift to match what we're seeing. @done
 ✓ SetupCubes should use the AddNote function @done
