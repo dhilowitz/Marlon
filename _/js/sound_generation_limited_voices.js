@@ -34,7 +34,8 @@ SoundGeneration.prototype.getNoteURL = function getNoteURL(noteNumber)
 {
 	if(noteNumber >= 48 && noteNumber <= 112)
 	{
-		return "autoharp/mp3/" + zeroPad(noteNumber, 3) + ".mp3"; 
+		//return "autoharp/mp3/" + zeroPad(noteNumber, 3) + ".mp3"; 
+		return "moog_12_c_hendre/mp3/" + encodeURIComponent(ConvertMIDINoteNumberToNoteName(noteNumber)) + ".mp3"; 
 		
 	}
 	return null;
