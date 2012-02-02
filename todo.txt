@@ -7,7 +7,7 @@ MARLON:
 		- Each note needs to consist of two cubes -- a solid cube and an outline cube.
 	- Try adding a grid to use when in top-down mode.
 ✓  Introduce the concept of play/stop [2 hours] @done
-- Add actual sound generation.
+✓ Add actual sound generation. @done
 - Add a legend / key mapco [4 hours]
 - Introduce vertical rotation [1 day]
 

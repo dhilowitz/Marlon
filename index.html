@@ -87,7 +87,7 @@
 		function playNote(text) {   
 			if(sound_generation == null) return;
 			if(typeof(sound_generation) == 'undefined') return;
-			if(!isMuted)
+			//if(!isMuted)
 				sound_generation.playNote(text);
 		}  
 		
@@ -97,18 +97,23 @@
 			sound_generation.setMute(isMuted);     
 		}
 		*/
+		
 	</script>
 	<script src="_/js/functions.js"></script>
+	<script src="_/js/useful.js"></script>
 	<script src="_/js/modernizr-1.5.min.js"></script>
 	
 	<script src="_/js/marlon.js"></script>
-
+	<script src="_/js/sound_generation_limited_voices.js"></script>
 </head>
 
 <body id="www-domain-com" onDragStart="return false;">
 	<!--<div id="sound_generation"></div>-->
 	<script type="text/javascript" language="javascript">
-		var myMarlon = new Marlon("marlon_div");
+		var sound_generation = new SoundGeneration(10);
+		sound_generation.init();
+	
+		var myMarlon = new Marlon("marlon_div", sound_generation);
 		animate();
 	
 		function animate() {

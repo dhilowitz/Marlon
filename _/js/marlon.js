@@ -92,7 +92,7 @@ Marlon.prototype.setupVoices = function () {
 }
 
 
-function Marlon (marlonCanvasID)
+function Marlon (marlonCanvasID, soundGeneration)
 {
 	this.WIDTH = window.innerWidth - 0;
 	this.HEIGHT = window.innerHeight - 0;
@@ -117,6 +117,33 @@ function Marlon (marlonCanvasID)
 	this.setupPlayhead();
 	this.dimAndUndimNotes();
 	
+	this.soundGeneration = soundGeneration;
+	this.isMuted = false;
+}
+
+Marlon.prototype.playNote = function(text) {
+	if(this.soundGeneration == null) return;
+	if(typeof(this.soundGeneration) == 'undefined') return;
+	if(!this.isMuted)
+		this.soundGeneration.playNote(text);
+}
+
+Marlon.prototype.playCurrentNotes = function() {
+	for(var voiceCounter = 0; voiceCounter < NUMBER_OF_VOICES; voiceCounter++) {
+		for (var noteCounter = 0; noteCounter < this.voices[voiceCounter].sequence.notes.length; noteCounter++) {
+			var currentNote = this.voices[voiceCounter].sequence.notes[noteCounter];
+			
+			if(currentNote.step == this.playheadPosition) {
+				this.playNote(currentNote.midiNote);
+			}
+		}
+	}
+}
+		
+Marlon.prototype.toggleMute = function () {   
+	this.isMuted = !this.isMuted;
+	//$('#muteButton').text((this.isMuted) ? "ON" : "OFF"); 
+	//sound_generation.setMute(isMuted);     
 }
 
 Marlon.prototype.drawGrid = function() {
@@ -368,12 +395,16 @@ Marlon.prototype.render =  function() {
 			// Set the variable that stores when we last moved the playhead
 			this.lastPlayheadMoveTime = new Date().getTime();
 			// Trigger the appropriate notes
+			this.playCurrentNotes();
 			// Move the actual 3D objects that are related to the 
 			this.calculatePlayheadPosition();
+			
+		} else {
+			// NO:
+			// Do nothing.
 		}
-		// NO:
 	}
-		// Do nothing.
+		
 }
 
 
