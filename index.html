@@ -10,114 +10,41 @@
 	<title>MARLON</title>
 	
 	<meta name="description" content="MARLON: A 3D HTML5-based music sequencer." />
-	<meta name="author" content="Marlon" />
-	<meta name="Copyright" content="Copyright David Hilowitz 2011. All Rights Reserved." />
+	<meta name="author" content="David Hilowitz" />
+	<meta name="Copyright" content="Copyright David Hilowitz 2011-2017. All Rights Reserved." />
 
 	<meta name="DC.title" content="Marlon" />
 	<meta name="DC.subject" content="Marlon -- An HTML-based Music Sequencer" />
 	<meta name="DC.creator" content="Marlon" />
 	
-	<meta name="google-site-verification" content="" />
-	<!-- Speaking of Google, don't forget to set your site up: http://google.com/webmasters -->
-	<!--
-	<link rel="shortcut icon" href="_/img/favicon.png"/>
-	--><!-- This is the traditional favicon.
-		 - size: 16x16 or 32x32
-		 - transparency is OK
-		 - see wikipedia for info on browser support: http://mky.be/favicon/ -->
-	
-	<link rel="apple-touch-icon" href="_/img/custom_icon.png"/>
-	<!-- The is the icon for iOS's Web Clip.
-		 - size: 57x57 for older iPhones, 72x72 for iPads, 114x114 for iPhone4's retina display (IMHO, just go ahead and use the biggest one)
-		 - To prevent iOS from applying its styles to the icon name it thusly: apple-touch-icon-precomposed.png
-		 - Transparency is not recommended (iOS will put a black BG behind the icon) -->
-
-	<link rel="stylesheet" href="_/css/main.css" />
-	<!-- main.css is a gateway file. You will spend your time in core.css -->
-	
-	<link rel="stylesheet" href="_/css/_print/main.css" media="print" />
-	
-	<!-- These are IE-specific conditional style sheets. 
-		 You might consider removing the ones you don't end up using. -->
-		 
-	<!--[if IE]>
-	<link rel="stylesheet" href="_/css/patches/win-ie-all.css" />
-	<![endif]-->
-	<!--[if IE 7]>
-	<link rel="stylesheet" href="_/css/patches/win-ie7.css" />
-	<![endif]-->
-	<!--[if lt IE 7]>
-	<link rel="stylesheet" href="_/css/patches/win-ie-old.css" />
-	<![endif]-->
-	
-	<!-- The following is STRONGLY OPTIONAL, but useful if you really need to kick IE in the pants.
-		 There are different flavors; pick the one right for your project: http://code.google.com/p/ie7-js/ -->
-	<!--[if lt IE 8]>
-	<script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js"></script>
-	<![endif]-->
 	
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script src="_/js/useful.js"></script>
-    <script src="_/js/swfobject.js"></script>
-	<script type="text/javascript" language="JavaScript" src="_/js/Three.js"></script>
-	<script type="text/javascript" language="JavaScript" src="_/js/RequestAnimationFrame.js"></script>
-	<script src="_/js/Stats.js"></script>
-    <script type="text/javascript">
-	/*
-		var sound_generation = null;
-		var flashvars = {};
-    	var params = {allowScriptAccess:"always"};
-	    var attributes = { id: "sound_generation", name: "sound_generation" };
-		
-		swfobject.embedSWF("_/swf/SoundGeneration2.swf", 
-						   "sound_generation", 
-						   "1", 
-						   "1", 
-						   "10.0.0", 
-						   "expressInstall.swf", 
-						   flashvars, 
-						   params, 
-						   attributes, 
-						   function callbackFn(e) {sound_generation = e.ref;
-						   
-							}
-						   );
-		
-		function playNote(text) {   
-			if(sound_generation == null) return;
-			if(typeof(sound_generation) == 'undefined') return;
-			//if(!isMuted)
-				sound_generation.playNote(text);
-		}  
-		
-		function toggleMute() {   
-			isMuted = !isMuted;
-			$('#muteButton').text((isMuted) ? "ON" : "OFF"); 
-			sound_generation.setMute(isMuted);     
-		}
-		*/
-		
-	</script>
-	<script src="_/js/functions.js"></script>
-	<script src="_/js/useful.js"></script>
-	<script src="_/js/modernizr-1.5.min.js"></script>
+	<script type="text/javascript" language="JavaScript" src="_/js/lib/jquery.min.js"></script>
+    <script type="text/javascript" language="JavaScript" src="_/js/lib/useful.js"></script>
+	<script type="text/javascript" language="JavaScript" src="node_modules/three/three.min.js"></script>
+	<script type="text/javascript" language="JavaScript" src="node_modules/stats.js/build/stats.min.js"></script>
+	<script type="text/javascript" language="JavaScript" src="node_modules/tone/build/Tone.min.js"></script>
+    
+	<script type="text/javascript" language="JavaScript" src="_/js/lib/functions.js"></script>
+	<script type="text/javascript" language="JavaScript" src="_/js/lib/useful.js"></script>
 	
 	<script src="_/js/marlon.js"></script>
-	<script src="_/js/sound_generation_limited_voices.js"></script>
 </head>
 
-<body id="www-domain-com" onDragStart="return false;">
-	<!--<div id="sound_generation"></div>-->
+<body onDragStart="return false;">
 	<script type="text/javascript" language="javascript">
-		var sound_generation = new SoundGeneration(10);
-		sound_generation.init();
-	
-		var myMarlon = new Marlon("marlon_div", sound_generation);
+
+		//a 8 voice Synth
+		var polySynth = new Tone.PolySynth(8, Tone.Synth).toMaster();
+
+		//play a chord
+		var myMarlon = new Marlon(polySynth);
+
 		animate();
 	
-		function animate() {
-			requestAnimationFrame(animate);
+		function animate(time) {
+		  // time ~= +new Date // the unix time
+			window.requestAnimationFrame(animate);
 			myMarlon.render();
 		}		
 	</script>

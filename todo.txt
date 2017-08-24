@@ -1,17 +1,18 @@
 MARLON:
 - Get voice selection to look perfect
-	✓ Try switching the way the voice selection and the playhead look...hmm. not sure. 
-	✓ Try making all of the notes on non-current layers wireframe.	
-	It looks less good...but it's *way* more usable.
 	- Try adding an outline around the active material.
 		- Each note needs to consist of two cubes -- a solid cube and an outline cube.
 	- Try adding a grid to use when in top-down mode.
-✓  Introduce the concept of play/stop [2 hours] @done
-✓ Add actual sound generation. @done
+
 - Add a legend / key mapco [4 hours]
 - Introduce vertical rotation [1 day]
+- Make a default pattern that's not totally awful.
+- Try making it "multi-threaded" -- ie. have a separate loop for the audio stuff.
+✓ Try switching to Flash 10 audio instead of JavaScript :(
 
 ARCHIVE:
+✓ Introduce the concept of play/stop [2 hours] @done
+✓ Add actual sound generation. @done
 - Get voice selection to look perfect
 	✓ Try switching the way the voice selection and the playhead look...hmm. not sure. 
 	✓ Try making all of the notes on non-current layers wireframe.	

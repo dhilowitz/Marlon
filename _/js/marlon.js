@@ -45,6 +45,8 @@ function Voice(voiceNumber)
 	this.voiceNumber = voiceNumber;
 	this.sequence = new Sequence();
 	this.color = VOICE_COLORS[voiceNumber];
+	// this.color = "lightblue";
+	// this.color = "aliceblue";
 	
 	this.activeMaterial = new THREE.MeshBasicMaterial( { 
 		color: this.color, 
@@ -75,24 +77,10 @@ Marlon.prototype.setupVoices = function () {
 	this.voices[0].sequence.notes.push(new Note(57, 8));
 	this.voices[0].sequence.notes.push(new Note(57, 12));
 	
-	this.voices[1].sequence.notes.push(new Note(57, 0));
-	this.voices[1].sequence.notes.push(new Note(57+12, 4));
-	this.voices[1].sequence.notes.push(new Note(57, 8));
-	this.voices[1].sequence.notes.push(new Note(57+12, 12));
-	
-	this.voices[2].sequence.notes.push(new Note(58, 3));
-	this.voices[2].sequence.notes.push(new Note(58, 7));
-	this.voices[2].sequence.notes.push(new Note(58, 11));
-	this.voices[2].sequence.notes.push(new Note(58, 15));
-	
-	this.voices[3].sequence.notes.push(new Note(61, 2));
-	this.voices[3].sequence.notes.push(new Note(61, 6));
-	this.voices[3].sequence.notes.push(new Note(61, 10));
-	this.voices[3].sequence.notes.push(new Note(61, 14));
 }
 
 
-function Marlon (marlonCanvasID, soundGeneration)
+function Marlon (soundGeneration)
 {
 	this.WIDTH = window.innerWidth - 0;
 	this.HEIGHT = window.innerHeight - 0;
@@ -108,7 +96,7 @@ function Marlon (marlonCanvasID, soundGeneration)
 	this.lastPlayheadMoveTime = Date.now();
 
 	
-	this.init(marlonCanvasID);
+	this.init();
 	this.setupEventHandlers();
 	
 	this.setupVoices();
@@ -121,23 +109,27 @@ function Marlon (marlonCanvasID, soundGeneration)
 	this.isMuted = false;
 }
 
-Marlon.prototype.playNote = function(text) {
+Marlon.prototype.playCurrentNotes = function() {
+	if(this.isMuted) {
+		return;
+	}
+
 	if(this.soundGeneration == null) return;
 	if(typeof(this.soundGeneration) == 'undefined') return;
-	if(!this.isMuted)
-		this.soundGeneration.playNote(text);
-}
 
-Marlon.prototype.playCurrentNotes = function() {
+	var notesToPlay = [];
 	for(var voiceCounter = 0; voiceCounter < NUMBER_OF_VOICES; voiceCounter++) {
 		for (var noteCounter = 0; noteCounter < this.voices[voiceCounter].sequence.notes.length; noteCounter++) {
 			var currentNote = this.voices[voiceCounter].sequence.notes[noteCounter];
 			
 			if(currentNote.step == this.playheadPosition) {
-				this.playNote(currentNote.midiNote);
+				notesToPlay.push(ConvertMIDINoteNumberToNoteName(currentNote.midiNote + voiceCounter*12 -24));
+				// this.soundGeneration.triggerAttackRelease(ConvertMIDINoteNumberToNoteName(currentNote.midiNote + voiceCounter*12 -24), "8n")
 			}
 		}
 	}
+
+	this.soundGeneration.triggerAttackRelease(notesToPlay, "8n");
 }
 		
 Marlon.prototype.toggleMute = function () {   
@@ -307,7 +299,7 @@ Marlon.prototype.moveCurrentVoiceSelector = function() {
 	this.dimAndUndimNotes();
 }
 
-Marlon.prototype.init = function (marlonCanvasID) {
+Marlon.prototype.init = function () {
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 	
@@ -330,27 +322,12 @@ Marlon.prototype.init = function (marlonCanvasID) {
     this.drawGrid();
 	this.setupCurrentVoiceSelector();
 	
-/*
 
-	//Playhead Grid
-	geometry = new THREE.PlaneGeometry( 32, 512, 1, 16);
-    material = new THREE.MeshBasicMaterial( { color: 0x0000FF, wireframe: true });
-
-    this.playheadGrid = new THREE.Mesh( geometry, material );
-	this.playheadGrid.position.x = this.grid.position.z = 0;
-	this.grid.position.y = -1;
-	this.xTriggered = 0;
-	
-	this.playheadGrid.rotation.x = -Math.PI/2;
-	this.calculatePlayheadPosition();
-	this.scene.add( this.playheadGrid );
-*/
     this.renderer = new THREE.CanvasRenderer();
 	this.renderer.domElement.style.position = 'absolute';
 	this.renderer.domElement.style.top = '0';
     this.renderer.setSize(this.WIDTH, this.HEIGHT);
 
-	//document.getElementById(marlonCanvasID).appendChild( this.renderer.domElement );
 	this.calculateCameraPosition();
    	container.appendChild( this.renderer.domElement );
 }
