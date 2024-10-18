@@ -405,7 +405,7 @@ Marlon.prototype.calculateCameraPosition =  function() {
 }
 
 Marlon.prototype.movePlayhead =  function() {
-	this.playheadPosition = (this.playheadPosition < 15) ? this.playheadPosition + 1:0;
+	this.playheadPosition = (this.playheadPosition < (NUMBER_OF_SEQUENCE_STEPS-1)) ? this.playheadPosition + 1:0;
 }
 
 Marlon.prototype.setHorizontalRotation = function(degrees) {

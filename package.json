@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/dhilowitz/Marlon.git"
+    "url": "git+ssh://github.com/dhilowitz/Marlon.git"
   },
   "keywords": [
     "web-audio",
