@@ -697,13 +697,13 @@ Marlon.prototype.onKeyDown = function(event) {
 				break;
 		case 189: // '-' key
 			//this.rotationDegreesVertical -= CAMERA_ROTATION_STEP_AMOUNT;
-			this.cameraHeight -= 10;
+			this.cameraHeight += 10;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
 		case 187: // '+' key
 			//this.rotationDegreesVertical += CAMERA_ROTATION_STEP_AMOUNT;
-			this.cameraHeight += 10;
+			this.cameraHeight -= 10;
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
