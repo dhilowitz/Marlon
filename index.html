@@ -11,7 +11,7 @@
 	
 	<meta name="description" content="MARLON: A 3D HTML5-based music sequencer." />
 	<meta name="author" content="David Hilowitz" />
-	<meta name="Copyright" content="Copyright David Hilowitz 2011-2017. All Rights Reserved." />
+	<meta name="Copyright" content="Copyright David Hilowitz 2011-2024. All Rights Reserved." />
 
 	<meta name="DC.title" content="Marlon" />
 	<meta name="DC.subject" content="Marlon -- An HTML-based Music Sequencer" />
@@ -29,6 +29,10 @@
 	<script type="text/javascript" language="JavaScript" src="_/js/lib/useful.js"></script>
 	
 	<script src="_/js/marlon.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="_/css/main.css" />
 </head>
 
 <body onDragStart="return false;">
@@ -46,5 +50,67 @@
 			myMarlon.tick();
 		}		
 	</script>
+	<div id="shortcuts">
+		<h2>Shortcuts</h2>
+		<table cellpadding="0">
+			<tr>
+				<th>Key</th>
+				<th>Action</th>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<td></td>
+			</tr><tr>
+				<th>?</th>
+				<td>Show/hide this help box</td>
+			</tr>
+				<th>Return</th>
+				<td>Play/Stop</td>
+			</tr>
+				
+			<tr>
+				<th>Space</th>
+				<td>Add or remove note</td>
+			</tr>
+			<tr>
+				<th>Arrow keys</th>
+				<td>Move cursor</td>
+			</tr>
+			<tr>
+				<th>,</th>
+				<td>Rotate camera to the left</td>
+			</tr>
+			<tr>
+				<th>.</th>
+				<td>Rotate camera to the right</td>
+			</tr>
+			<tr>
+				<th>-</th>
+				<td>Zoom camera out</td>
+			</tr>
+			<tr>
+				<th>+</th>
+				<td>Zoom camera in</td>
+			</tr>
+			<tr>
+				<th>0</th>
+				<td>Shift camera to 45° perspective</td>
+			</tr>
+			<tr>
+				<th>1</th>
+				<td>Shift camera to top view</td>
+			</tr>
+			<tr>
+				<th>x</th>
+				<td>Move up an octave</td>
+			</tr>
+			<tr>
+				<th>z</th>
+				<td>Move down an octave</td>
+			</tr>
+		</table>
+		
+	</div>
+
 </body>
 </html>

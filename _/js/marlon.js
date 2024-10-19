@@ -139,6 +139,7 @@ Marlon.prototype.toggleMute = function () {
 }
 
 Marlon.prototype.drawGrid = function() {
+	
 	//Grid
 	geometry = new THREE.PlaneGeometry( GRID_WIDTH, GRID_DEPTH, NUMBER_OF_SEQUENCE_STEPS, NUMBER_OF_GRID_NOTES);
     material = new THREE.MeshBasicMaterial( { color: 0x88AAFF, wireframe: true } );
@@ -148,6 +149,7 @@ Marlon.prototype.drawGrid = function() {
 	this.grid.rotation.x = -Math.PI/2;
 	this.grid.position.x = GRID_WIDTH/2;
 	this.grid.position.z = GRID_DEPTH/2;
+	
 	
 	this.scene.add( this.grid );
 	
@@ -376,6 +378,8 @@ Marlon.prototype.tick =  function() {
 			// Move the actual 3D objects that are related to the playhead
 			this.calculatePlayheadPosition();
 		}
+	} else {
+		this.lastPlayheadMoveTime = new Date().getTime();
 	}
 		
 }
@@ -704,8 +708,16 @@ Marlon.prototype.onKeyDown = function(event) {
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
-		case 16: // shift
-		case 18: // option key
+		case 191: // '?' key
+			// Hide shortcuts panel
+			$('#shortcuts').toggle();	
+			
+			event.preventDefault();
+			// drawDebugAxes();
+			break;
+		case 13: // enter key
+		// case 16: // shift
+		// case 18: // option key
 			this.playing = !this.playing;
 			event.preventDefault();
 			break;
