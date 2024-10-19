@@ -4,30 +4,29 @@ MARLON:
 		- Each note needs to consist of two cubes -- a solid cube and an outline cube.
 	- Try adding a grid to use when in top-down mode.
 
-- Add a legend / key mapco [4 hours]
-- Introduce vertical rotation [1 day]
-- Make a default pattern that's not totally awful.
-- Try making it "multi-threaded" -- ie. have a separate loop for the audio stuff.
-✓ Try switching to Flash 10 audio instead of JavaScript :(
+- [ ] Add a legend / key map [4 hours]
+- [ ] Introduce vertical rotation [1 day]
+- [ ] Make a default pattern that's not totally awful.
+- [ ] Try making it "multi-threaded" -- ie. have a separate loop for the audio stuff.
 
 ARCHIVE:
-✓ Introduce the concept of play/stop [2 hours] @done
-✓ Add actual sound generation. @done
+- [ ] Introduce the concept of play/stop [2 hours] @done
+- [ ] Add actual sound generation. @done
 - Get voice selection to look perfect
-	✓ Try switching the way the voice selection and the playhead look...hmm. not sure. 
-	✓ Try making all of the notes on non-current layers wireframe.	
+	- [ ] Try switching the way the voice selection and the playhead look...hmm. not sure. 
+	- [ ] Try making all of the notes on non-current layers wireframe.	
 	It looks less good...but it's *way* more usable.
-✓ Be able to raise and lower camera with '+' and '-' keys. @done
-✓ When we rotate, the controls should shift to match what we're seeing. @done
-✓ SetupCubes should use the AddNote function @done
-✓ The SHIFT key should be usable to "paint" notes onto the grid @done
-✓ Have multiple notes per step be possible @done
-✓ Sign up for github @done
-✓ Add this project to github @done
-✓ Make an object-orient version of test.html @done
-✓ Add a current voice selector @done
-✓ Add mouse rotation @done
-✓ We only need mouse up listener once we've moused down. Similarly, we don't need a mouse down listener once the mouse is already down, and we don't....you get the idea. @done
-✓ Start using globals instead of class variables for constants. @done
-✓ Introduce the concept of voices @done
-✓ Introduce the concept of notes @done
+- [ ] Be able to raise and lower camera with '+' and '-' keys. @done
+- [ ] When we rotate, the controls should shift to match what we're seeing. @done
+- [ ] SetupCubes should use the AddNote function @done
+- [ ] The SHIFT key should be usable to "paint" notes onto the grid @done
+- [ ] Have multiple notes per step be possible @done
+- [ ] Sign up for github @done
+- [ ] Add this project to github @done
+- [ ] Make an object-orient version of test.html @done
+- [ ] Add a current voice selector @done
+- [ ] Add mouse rotation @done
+- [ ] We only need mouse up listener once we've moused down. Similarly, we don't need a mouse down listener once the mouse is already down, and we don't....you get the idea. @done
+- [ ] Start using globals instead of class variables for constants. @done
+- [ ] Introduce the concept of voices @done
+- [ ] Introduce the concept of notes @done

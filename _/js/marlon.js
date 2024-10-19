@@ -352,33 +352,29 @@ Marlon.prototype.setupCubes = function() {
 	}
 }
 
-Marlon.prototype.render =  function() {
+Marlon.prototype.tick =  function() {
 	this.renderer.render( this.scene, this.camera );
 	this.stats.update();
 	
 	if(this.playing) {
 		// Calculate how often we should be moving the playhead
-		var secsPerBeat = (60.0 / this.tempo);
-		var secsPerSixteenth = secsPerBeat / 4.0;
+		var secsPerSixteenth = (60.0 / this.tempo) / 4.0;
 		
 		var howOften = secsPerSixteenth * 1000.0;
 		var now = Date.now();
+		var delta = now - this.lastPlayheadMoveTime;
+		var howLateAreWe = delta - howOften;
 		
 		// Has it been the needed amount of time?
-		if(now - this.lastPlayheadMoveTime > howOften) {
-		// YES:
+		if(howLateAreWe > 0) {
 			// Move playhead
 			this.movePlayhead();
 			// Set the variable that stores when we last moved the playhead
-			this.lastPlayheadMoveTime = new Date().getTime();
+			this.lastPlayheadMoveTime = new Date().getTime() - howLateAreWe;
 			// Trigger the appropriate notes
 			this.playCurrentNotes();
-			// Move the actual 3D objects that are related to the 
+			// Move the actual 3D objects that are related to the playhead
 			this.calculatePlayheadPosition();
-			
-		} else {
-			// NO:
-			// Do nothing.
 		}
 	}
 		
@@ -674,7 +670,8 @@ Marlon.prototype.onKeyDown = function(event) {
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
-		case 16:
+		
+		case 32: // space bar
 			this.shiftMeans = this.toggleNote(this.currentVoice, this.currentNote, this.currentStep);
 			event.preventDefault();
 			break;
@@ -707,7 +704,7 @@ Marlon.prototype.onKeyDown = function(event) {
 			this.calculateCameraPosition();
 			event.preventDefault();
 			break;
-		case 32: // space bar
+		case 16: // shift
 		case 18: // option key
 			this.playing = !this.playing;
 			event.preventDefault();
