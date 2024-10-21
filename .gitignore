@@ -7,4 +7,4 @@ _/.DS_Store
 .DS_Store
 marlon.bbprojectd/
 *.sublime-*
-node_modules
+# node_modules
