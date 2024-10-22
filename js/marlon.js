@@ -332,6 +332,8 @@ Marlon.prototype.init = function () {
 
 	this.calculateCameraPosition();
    	container.appendChild( this.renderer.domElement );
+
+   	this.playing = false;
 }
 
 Marlon.prototype.setupCubes = function() {
@@ -354,6 +356,19 @@ Marlon.prototype.setupCubes = function() {
 	}
 }
 
+Marlon.prototype.startStop = function() {
+	if(this.playing == false) {
+		Tone.context.resume();
+		this.playing = true;
+		$('#start-button').text('STOP');
+	} else {
+		// Tone.context.off();
+		// Tone.context.off();
+		this.playing = false;
+		$('#start-button').text('START');
+	}
+}
+
 Marlon.prototype.tick =  function() {
 	this.renderer.render( this.scene, this.camera );
 	this.stats.update();
@@ -366,6 +381,10 @@ Marlon.prototype.tick =  function() {
 		var now = Date.now();
 		var delta = now - this.lastPlayheadMoveTime;
 		var howLateAreWe = delta - howOften;
+
+
+		if(howLateAreWe > howOften) 
+			howLateAreWe = howOften;
 		
 		// Has it been the needed amount of time?
 		if(howLateAreWe > 0) {
@@ -718,7 +737,7 @@ Marlon.prototype.onKeyDown = function(event) {
 		case 13: // enter key
 		// case 16: // shift
 		// case 18: // option key
-			this.playing = !this.playing;
+			this.startStop();
 			event.preventDefault();
 			break;
 	}

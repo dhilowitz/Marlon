@@ -81,8 +81,8 @@ abbr {
 
 #title
 {
-        font-family:'LG2',Helvetica Neue, Helvetica, Arial, Sans-serif;
-       	position:relative;
+    font-family:'LG2',Helvetica Neue, Helvetica, Arial, Sans-serif;
+    position:relative;
 	left:46px;
 	top: 15px;
 	width:300px;
@@ -113,7 +113,7 @@ abbr {
 #shortcuts {
 	position:relative;
 	left:10px;
-	top: 100px;
+	top: 90px;
 	width:260px;
 	background-color: rgba(25, 25, 56, 1);
 	color:color(srgb 0.2635 0.9982 0.9995);
@@ -133,4 +133,20 @@ abbr {
 
 #shortcuts td {
 	margin-bottom: 1em;
+}
+
+button#start-button {
+	font-family: "VT323", monospace;
+	font-weight: 400;
+	font-size: 1em;
+	position:relative;
+	left:10px;
+	top:60px;
+	border:0;
+	font-weight: bold;
+	background-color: rgba(25, 25, 56, 1);
+	color:color(srgb 0.2635 0.9982 0.9995);
+	padding:1em;
+	
+	box-shadow: 12px 12px 0px 0px rgba(0, 0, 255, .2);
 }

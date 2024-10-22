@@ -14,7 +14,7 @@
 	<meta name="Copyright" content="Copyright David Hilowitz 2011-2024. All Rights Reserved." />
 
 	<meta name="DC.title" content="Marlon" />
-	<meta name="DC.subject" content="Marlon -- An HTML-based Music Sequencer" />
+	<meta name="DC.subject" content="Marlon – A 3D Music Sequencer" />
 	<meta name="DC.creator" content="Marlon" />
 	
 	
@@ -48,8 +48,9 @@
 		  // time ~= +new Date // the unix time
 			window.requestAnimationFrame(animate);
 			myMarlon.tick();
-		}		
+		}
 	</script>
+	<button onClick="myMarlon.startStop();" id="start-button">START</button>
 	<div id="shortcuts">
 		<h2>Shortcuts</h2>
 		<table cellpadding="0">

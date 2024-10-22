@@ -1,32 +1,31 @@
 MARLON:
-- Get voice selection to look perfect
-	- Try adding an outline around the active material.
-		- Each note needs to consist of two cubes -- a solid cube and an outline cube.
-	- Try adding a grid to use when in top-down mode.
-
-- [ ] Add a legend / key map [4 hours]
+- [ ] Get voice selection to look perfect
+	- [ ] Try adding an outline around the active material.
+		- [ ] Each note needs to consist of two cubes -- a solid cube and an outline cube.
+	- [x] Try adding a grid to use when in top-down mode. @done (2024-10-21 23:42)
 - [ ] Introduce vertical rotation [1 day]
 - [ ] Make a default pattern that's not totally awful.
 - [ ] Try making it "multi-threaded" -- ie. have a separate loop for the audio stuff.
 
 ARCHIVE:
-- [ ] Introduce the concept of play/stop [2 hours] @done
-- [ ] Add actual sound generation. @done
+- [x] Add a legend / key map [4 hours] @done (2024-10-21 23:41)
+- [x] Introduce the concept of play/stop [2 hours] @done @done (2024-10-21 23:41)
+- [x] Add actual sound generation. @done @done (2024-10-21 23:42)
 - Get voice selection to look perfect
-	- [ ] Try switching the way the voice selection and the playhead look...hmm. not sure. 
-	- [ ] Try making all of the notes on non-current layers wireframe.	
+	- [x] Try switching the way the voice selection and the playhead look...hmm. not sure.  @done (2024-10-21 23:42)
+	- [x] Try making all of the notes on non-current layers wireframe.	 @done (2024-10-21 23:42)
 	It looks less good...but it's *way* more usable.
-- [ ] Be able to raise and lower camera with '+' and '-' keys. @done
-- [ ] When we rotate, the controls should shift to match what we're seeing. @done
-- [ ] SetupCubes should use the AddNote function @done
-- [ ] The SHIFT key should be usable to "paint" notes onto the grid @done
-- [ ] Have multiple notes per step be possible @done
-- [ ] Sign up for github @done
-- [ ] Add this project to github @done
-- [ ] Make an object-orient version of test.html @done
-- [ ] Add a current voice selector @done
-- [ ] Add mouse rotation @done
-- [ ] We only need mouse up listener once we've moused down. Similarly, we don't need a mouse down listener once the mouse is already down, and we don't....you get the idea. @done
-- [ ] Start using globals instead of class variables for constants. @done
-- [ ] Introduce the concept of voices @done
-- [ ] Introduce the concept of notes @done
+- [x] Be able to raise and lower camera with '+' and '-' keys. @done @done (2024-10-21 23:42)
+- [x] When we rotate, the controls should shift to match what we're seeing. @done @done (2024-10-21 23:42)
+- [x] SetupCubes should use the AddNote function @done @done (2024-10-21 23:42)
+- [x] The SHIFT key should be usable to "paint" notes onto the grid @done @done (2024-10-21 23:42)
+- [x] Have multiple notes per step be possible @done @done (2024-10-21 23:42)
+- [x] Sign up for github @done @done (2024-10-21 23:42)
+- [x] Add this project to github @done @done (2024-10-21 23:42)
+- [x] Make an object-orient version of test.html @done @done (2024-10-21 23:42)
+- [x] Add a current voice selector @done @done (2024-10-21 23:42)
+- [x] Add mouse rotation @done @done (2024-10-21 23:42)
+- [x] We only need mouse up listener once we've moused down. Similarly, we don't need a mouse down listener once the mouse is already down, and we don't....you get the idea. @done @done (2024-10-21 23:42)
+- [x] Start using globals instead of class variables for constants. @done @done (2024-10-21 23:42)
+- [x] Introduce the concept of voices @done @done (2024-10-21 23:42)
+- [x] Introduce the concept of notes @done @done (2024-10-21 23:42)
